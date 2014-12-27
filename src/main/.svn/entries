@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   repos="https://psoa-ruleml-api.googlecode.com/svn"
+   name=""
+   revision="7"
+   last-author="sadnanalmanir"
+   uuid="8a0042aa-bdc1-9a94-749b-4e08d2916030"
+   url="https://psoa-ruleml-api.googlecode.com/svn/trunk/PSOARuleML-API/src/main"
+   committed-rev="7"
+   kind="dir"
+   committed-date="2012-04-20T03:01:31.430855Z"/>
+<entry
+   name="java"
+   kind="dir"/>
+<entry
+   name="resources"
+   kind="dir"/>
+</wc-entries>

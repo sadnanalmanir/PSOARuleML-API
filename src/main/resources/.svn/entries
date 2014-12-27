@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   repos="https://psoa-ruleml-api.googlecode.com/svn"
+   name=""
+   revision="7"
+   last-author="sadnanalmanir"
+   url="https://psoa-ruleml-api.googlecode.com/svn/trunk/PSOARuleML-API/src/main/resources"
+   committed-rev="5"
+   kind="dir"
+   committed-date="2012-04-20T02:24:42.998000Z"/>
+<entry
+   name="PSOACond.xsd"
+   checksum="b84e8e922157f64bc2065478d74893e8"
+   last-author="sadnanalmanir"
+   committed-rev="5"
+   text-time="2012-02-15T18:12:28.000000Z"
+   kind="file"
+   committed-date="2012-04-20T02:24:42.998000Z"
+   prop-time="2012-04-20T02:23:59.000000Z"/>
+<entry
+   name="PSOARule.xsd"
+   checksum="e42b80742982da23c995ec942658f714"
+   last-author="sadnanalmanir"
+   committed-rev="5"
+   text-time="2012-02-15T18:04:25.000000Z"
+   kind="file"
+   committed-date="2012-04-20T02:24:42.998000Z"
+   prop-time="2012-04-20T02:23:55.000000Z"/>
+<entry
+   name="xml.xsd"
+   checksum="bf97e27bdd02f7031a8a71ea4d229daf"
+   last-author="sadnanalmanir"
+   committed-rev="5"
+   text-time="2009-11-28T19:28:20.000000Z"
+   kind="file"
+   committed-date="2012-04-20T02:24:42.998000Z"
+   prop-time="2012-04-20T02:24:06.000000Z"/>
+</wc-entries>

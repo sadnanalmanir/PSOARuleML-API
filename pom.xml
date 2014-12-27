@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.ruleml.psoa</groupId>
+  <artifactId>psoaruleml-api</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+  <name>PSOARuleML-API</name>
+  <description>A Java API which uses JAXB library to create abstract syntax objects 
+      from the XML schemas based on PSOA RuleML/XML language and currently converts
+      the RuleML/XML syntax into PSOA Presetation Syntax.
+  </description>    
+  <licenses>
+      <license>
+          <name>GPLv3</name>
+          <url>http://www.gnu.org/licenses/gpl-3.0.html</url>
+      </license>
+  </licenses>
+  <url>http://psoa-rulemlapi.rhcloud.com/psoaxml2ps/</url>
+  <developers>
+      <developer>
+          <id>sadnanalmanir</id>
+          <name>Mohammad Sadnan Al Manir</name>
+          <email>sadnanalmanir@gmail.com</email>
+          <organization>University of New Brunswick, Saint John</organization>
+          <organizationUrl>http://www2.unb.ca/csas/</organizationUrl>
+      </developer>
+  </developers>
+  <scm>
+      <connection>scm:git:git@github.com:sadnanalmanir/PSOARuleML-API.git</connection>
+      <developerConnection>scm:git:git@github.com:sadnanalmanir/PSOARuleML-API.git</developerConnection>
+      <url>https://github.com/sadnanalmanir/PSOARuleML-API.git</url>
+  </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
