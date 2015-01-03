@@ -240,7 +240,8 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 		public String toString(String indent) {
-			Set<AbstractSyntax.Var> vars = new HashSet(_variables);
+			//Set<AbstractSyntax.Var> vars = new HashSet(_variables);
+                        Set<AbstractSyntax.Var> vars = new TreeSet<AbstractSyntax.Var>(_variables);
 			// System.out.println(vars);
 			if (!vars.isEmpty()) {
 				String result = indent + "Forall ";
