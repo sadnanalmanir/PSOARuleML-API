@@ -35,5 +35,4 @@
       <developerConnection>scm:git:git@github.com:sadnanalmanir/PSOARuleML-API.git</developerConnection>
       <url>https://github.com/sadnanalmanir/PSOARuleML-API.git</url>
   </scm>
-  <finalName>psoaruleml-api</finalName>
 </project>
