@@ -78,10 +78,14 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 		public String toString(String indent) {
-			String result = indent + "Import(<" + _iri + ">" +
-
-			indent + toStringIfNonNull(_profile, indent, "", indent) + ")";
-
+			
+			String result = indent + "Import(<" + _iri + ">";
+			
+			if (_profile != null)
+				result += indent + toStringIfNonNull(_profile, indent, "", "") + ")";
+			else
+				result += toStringIfNonNull(_profile, "", "", "") + ")";
+					
 			return result;
 
 		}
@@ -111,7 +115,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 		public String toString(String indent) {
-			return indent + " <" + _iri + ">";
+			return "<" + _iri + ">";
 		}
 
 		private String _iri;
@@ -1258,7 +1262,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 		public String toString(String indent) {
-			return indent + _name;
+			return indent + "_" + _name;
 		}
 
 		private String _name;

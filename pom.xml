@@ -31,7 +31,7 @@
       <url>https://github.com/sadnanalmanir/PSOARuleML-API.git</url>
   </scm>
   <build>
-		<finalName>psoaruleml-api</finalName>
+    <finalName>psoaruleml-api</finalName>
 		<plugins>
 
 			<!-- Enforce JVM compatibility of sources and binaries. -->
@@ -124,19 +124,16 @@
 
 				mvn release:prepare release:perform
 
-                    Read http://nexus.sonatype.org/oss-repository-hosting.html#3 for
-                    instructions on releasing to this project's Sonatype repository
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.1</version>
-            </plugin>
-
-
-
-        </plugins>
-    </build>
+                  Read http://nexus.sonatype.org/oss-repository-hosting.html#3 for
+                  instructions on releasing to this project's Sonatype repository
+          -->
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-release-plugin</artifactId>
+              <version>2.5.1</version>
+          </plugin>
+      </plugins>
+  </build>
 
     <distributionManagement>
         <!-- My project's Sonatype repository to be used by the release plugin -->

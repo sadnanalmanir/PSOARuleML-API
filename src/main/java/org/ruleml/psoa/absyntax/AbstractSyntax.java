@@ -478,10 +478,6 @@ public interface AbstractSyntax {
 	// createX methods:
 
 	/**
-	 * @param base
-	 *            can be null
-	 * @param prefixes
-	 *            can be null or empty
 	 * @param imports
 	 *            can be null or empty
 	 * @param group

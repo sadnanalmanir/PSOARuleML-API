@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
- <xs:schema 
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-  xmlns:xml="http://www.w3.org/XML/1998/namespace"
-  xmlns="http://www.w3.org/2011/psoa#"
-  targetNamespace="http://www.w3.org/2011/psoa#"
-  elementFormDefault="qualified"
-  version="Id: PSOACond.xsd, v. 1.0, 2011-10-19, ">
-  
-<!--the xml.xsd is imported from web address, to load faster load it locally
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://psoa.ruleml.org/lang/spec#" targetNamespace="http://psoa.ruleml.org/lang/spec#" elementFormDefault="qualified" version="Id: PSOACond.xsd, v. 1.0, 2011-10-19, ">
+  <!--the xml.xsd is imported from web address, to load faster load it locally
 
  <xs:import namespace='http://www.w3.org/XML/1998/namespace'
             schemaLocation='http://www.w3.org/2001/03/xml.xsd'/> 
 
 
 -->
- <xs:import namespace='http://www.w3.org/XML/1998/namespace'
-            schemaLocation='xml.xsd'/> 
- 
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
   <xs:annotation>
     <xs:documentation>
-    This is the tentative XML schema for the Condition Language as defined by
-    the PSOA RuleML.
+
+      Last updated: 2014-12-29
+
+    This is the tentative XML schema for the Rule Language as defined by
+    the PSOA RuleML Published at http://www.cs.unb.ca/~boley/papers/SemanticsPsoaRules.pdf
+
     
     The schema is based on the following EBNF for the PSOA RuleML Condition Language:
  
@@ -32,7 +26,7 @@
                      'External' '(' Atom ')'
   ATOMIC         ::= Atom | Equal | Subclass
   Atom           ::= PSOA
-  PSOA           ::= TERM '#' TERM '(' (TUPLE*  (TERM '->' TERM)*) ')'
+  PSOA           ::= TERM '#' TERM '(' (TUPLE*  (TERM '-&gt;' TERM)*) ')'
   Equal          ::= TERM '=' TERM
   Subclass       ::= TERM '##' TERM
   TERM           ::= Const | Var | Expr | 'External' '(' Expr ')'
@@ -45,8 +39,7 @@
  
     </xs:documentation>
   </xs:annotation>
-  
-  <xs:group name="FORMULA">  
+  <xs:group name="FORMULA">
     <!--
   FORMULA        ::= 'And' '(' FORMULA* ')' |
                      'Or' '(' FORMULA* ')' |
@@ -62,21 +55,9 @@
       <xs:element name="External" type="External-FORMULA.type"/>
     </xs:choice>
   </xs:group>
-  
-  <xs:complexType name="External-FORMULA.type">
-    <!-- sensitive to FORMULA (Atom) context-->
-    <xs:sequence>
-      <xs:element name="content" type="content-FORMULA.type"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="content-FORMULA.type">
-    <!-- sensitive to FORMULA (Atom) context-->
-    <xs:sequence>
-      <xs:element ref="Atom"/>	<!--can it be psoa instead of "Atom"-->
-    </xs:sequence>
-  </xs:complexType>
- 
+  <!--
+  'And' '(' FORMULA* ')'
+    -->
   <xs:element name="And">
     <xs:complexType>
       <xs:sequence>
@@ -84,7 +65,9 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+  <!--
+                     'Or' '(' FORMULA* ')' 
+    -->
   <xs:element name="Or">
     <xs:complexType>
       <xs:sequence>
@@ -92,7 +75,10 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+  <!--
+                     'Exists' Var+ '(' FORMULA ')' 
+      
+    -->
   <xs:element name="Exists">
     <xs:complexType>
       <xs:sequence>
@@ -101,7 +87,21 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+  <!--
+                     'External' '(' Atom ')'
+    -->
+  <xs:complexType name="External-FORMULA.type">
+    <xs:sequence>
+      <xs:element name="content" type="content-FORMULA.type"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="content-FORMULA.type">
+    <!-- sensitive to FORMULA (Atom) context-->
+    <xs:sequence>
+      <xs:element ref="Atom"/>
+      <!--can it be psoa instead of "Atom"-->
+    </xs:sequence>
+  </xs:complexType>
   <xs:element name="formula">
     <xs:complexType>
       <xs:sequence>
@@ -109,7 +109,6 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
   <xs:element name="declare">
     <xs:complexType>
       <xs:sequence>
@@ -117,47 +116,41 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
- 
-  <xs:group name="ATOMIC">
-    <!--
+  <!--
   ATOMIC         ::= Atom | Equal | Subclass
-ATOMIC         ::= psoa | Equal | Subclass instead
--->
+  -->
+  <xs:group name="ATOMIC">
     <xs:choice>
-      <xs:element ref="Atom"/>			<!--Atom or psoa-->
+      <xs:element ref="Atom"/>
+      <!--Atom or psoa-->
       <xs:element ref="Equal"/>
       <xs:element ref="Subclass"/>
     </xs:choice>
   </xs:group>
-    
-<xs:element name="Atom">
-    <!--
+  <!--
   Atom           ::= PSOA
     -->
+  <xs:element name="Atom">
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="PSOA"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>  
-  
+  </xs:element>
+  <!--
+    PSOA           ::= TERM '#' TERM '(' (TUPLE*  (TERM '->' TERM)*) ')'
+  -->
   <xs:group name="PSOA">
-    <!--
-  UNITERM        ::= Const '(' (TERM* | (Name '->' TERM)*) ')'
-    -->
     <xs:sequence>
-      <!--xs:element ref="Member"/-->
       <xs:element ref="oid"/>
       <xs:element ref="op"/>
       <xs:element ref="args" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="slot" type="slot-PSOA.type" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:group>
-
-    <!--
-  TUPLE        ::= '[' TERM* ']' 
-  Change to args in place of Tuple
-    --> 
+  <!--
+    TUPLE
+  -->
   <xs:element name="args">
     <xs:complexType>
       <xs:sequence>
@@ -166,7 +159,9 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       <xs:attribute name="ordered" type="xs:string" fixed="yes"/>
     </xs:complexType>
   </xs:element>
- 
+  <!--
+    TERM '->' TERM
+  -->
   <xs:complexType name="slot-PSOA.type">
     <xs:sequence>
       <xs:group ref="TERM"/>
@@ -174,59 +169,10 @@ ATOMIC         ::= psoa | Equal | Subclass instead
     </xs:sequence>
     <xs:attribute name="ordered" type="xs:string" fixed="yes"/>
   </xs:complexType>
- 
-  <xs:element name="Equal">
-    <!--
-  Equal          ::= TERM '=' TERM
-    -->
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="left"/>
-        <xs:element ref="right"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
- 
-  <xs:element name="left">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="TERM"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
- 
-  <xs:element name="right">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="TERM"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
- 
-  <!--xs:element name="Member"-->
-    <!--
-  Member         ::= TERM '#' TERM
-    -->
-    <!--xs:complexType>
-      <xs:sequence>
-        <xs:element ref="oid"/>
-        <xs:element ref="op"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element-->
- 
-  <xs:element name="Subclass">
-    <!--
-  Subclass       ::= TERM '##' TERM
-    -->
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="sub"/>
-        <xs:element ref="super"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  
+  <!--
+    PSOA           ::= TERM '#' TERM '(' (TUPLE*  (TERM '->' TERM)*) ')'
+    PSOA           ::= oid  '#' TERM '(' (TUPLE*  (TERM '->' TERM)*) ')'
+  -->
   <xs:element name="oid">
     <xs:complexType>
       <xs:sequence>
@@ -234,7 +180,10 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+  <!--
+    PSOA           ::= TERM '#' TERM '(' (TUPLE*  (TERM '->' TERM)*) ')'
+    PSOA           ::= TERM '#' op   '(' (TUPLE*  (TERM '->' TERM)*) ')'
+  -->
   <xs:element name="op">
     <xs:complexType>
       <xs:sequence>
@@ -242,7 +191,53 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+  <!--
+  Equal          ::= TERM '=' TERM
+  Equal          ::= left '=' right
+-->
+  <xs:element name="Equal">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="left"/>
+        <xs:element ref="right"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+  left
+-->
+  <xs:element name="left">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="TERM"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+  right
+-->
+  <xs:element name="right">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="TERM"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+  Subclass       ::= TERM '##' TERM
+  Subclass       ::= sub  '##' super
+    -->
+  <xs:element name="Subclass">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sub"/>
+        <xs:element ref="super"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+  sub
+    -->
   <xs:element name="sub">
     <xs:complexType>
       <xs:sequence>
@@ -250,7 +245,9 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+  <!--
+  super
+    -->
   <xs:element name="super">
     <xs:complexType>
       <xs:sequence>
@@ -258,77 +255,63 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-     
-  <xs:group name="TERM">  
-    <!--
-  TERM           ::= Const | Var | Expr | 'External' '(' Expr ')'
-  TERM           ::= Const | Var | psoa | 'External' '(' psoa ')' instead
-  TERM           ::= Ind | Var | psoa | 'External' '(' psoa ')' instead
-  In the context of op under an Atom, Rel instead of Ind
-    -->
-      <xs:choice>
-         <xs:element ref="Ind"/>
-         <xs:element ref="Rel"/>
-         <xs:element ref="Var"/>
-         <xs:element ref="Expr"/>
-         <xs:element name="External" type="External-TERM.type"/>
-      </xs:choice>
+  <!--    
+Original:   
+TERM           ::= Const | Var | Expr | 'External' '(' Expr ')'
+Updated: All constants are either typed Ind or typed Rel 
+         Rel is only under op in an Atom, Ind is everywhere else
+TERM           ::= Ind | Rel | Var | Expr | 'External' '(' Expr ')'       
+
+-->
+  <xs:group name="TERM">
+    <xs:choice>
+      <xs:element ref="Ind"/>
+      <xs:element ref="Rel"/>
+      <xs:element ref="Var"/>
+      <xs:element ref="Expr"/>
+      <xs:element name="External" type="External-TERM.type"/>
+    </xs:choice>
   </xs:group>
-  
   <xs:complexType name="External-TERM.type">
     <!-- sensitive to TERM (Expr) context-->
     <xs:sequence>
       <xs:element name="content" type="content-TERM.type"/>
     </xs:sequence>
   </xs:complexType>
-  
   <xs:complexType name="content-TERM.type">
     <!-- sensitive to TERM (Expr) context-->
     <xs:sequence>
       <xs:element ref="Expr"/>
     </xs:sequence>
   </xs:complexType>
- 
- <xs:element name="Expr">
-    <!--
+  <!--
   Expr           ::= PSOA
     -->
+  <xs:element name="Expr">
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="PSOA"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
   <xs:element name="Ind">
-    <!--
-  Const          ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
-  Ind            ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
-    -->
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
-      <xs:attribute name="type" type="xs:anyURI" use="required"/> 
+      <xs:attribute name="type" type="xs:anyURI" use="required"/>
       <!--xs:attribute ref="xml:lang"/-->
     </xs:complexType>
   </xs:element>
-  
-<xs:element name="Rel">
-    <!--
-  Const          ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
-  Ind            ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
-  A constant is Rel instead of Ind, under the op inside an Atom 
-    -->
+  <xs:element name="Rel">
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
-      <xs:attribute name="type" type="xs:anyURI" use="required"/> 
+      <xs:attribute name="type" type="xs:anyURI" use="required"/>
       <!--xs:attribute ref="xml:lang"/-->
     </xs:complexType>
   </xs:element>
- 
   <xs:element name="Var">
     <!--
   Var            ::= '?' UNICODESTRING
@@ -339,7 +322,6 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       </xs:sequence>
     </xs:complexType>
   </xs:element>
- 
   <xs:group name="IRIMETA">
     <!--
   IRIMETA   ::= '(*' IRICONST? (Frame | 'And' '(' Frame* ')')? '*)'
@@ -349,7 +331,6 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       <xs:element ref="meta" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:group>
- 
   <xs:element name="id">
     <xs:complexType>
       <xs:sequence>
@@ -357,27 +338,22 @@ ATOMIC         ::= psoa | Equal | Subclass instead
       </xs:sequence>
     </xs:complexType>
   </xs:element>
- 
   <xs:element name="meta">
     <xs:complexType>
-     <xs:sequence>
-       <xs:element name="And" type="And-meta.type"/>
-     </xs:sequence>
+      <xs:sequence>
+        <xs:element name="And" type="And-meta.type"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
   <xs:complexType name="And-meta.type">
-  <!-- sensitive to meta (Frame) context-->
+    <!-- sensitive to meta (Frame) context-->
     <xs:sequence>
       <xs:element name="formula" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
-   
   <xs:complexType name="IRICONST.type" mixed="true">
     <!-- sensitive to location/id context-->
     <xs:sequence/>
-    <xs:attribute name="type" type="xs:anyURI" use="required" fixed="http://www.w3.org/2011/psoa#iri"/>
+    <xs:attribute name="type" type="xs:anyURI" use="required" fixed="http://psoa.ruleml.org/lang/spec#iri"/>
   </xs:complexType>
-  
- </xs:schema>
- 
+</xs:schema>
