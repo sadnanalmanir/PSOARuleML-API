@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.jcabi</groupId>
-    <artifactId>parent</artifactId>
-    <version>0.31</version>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>9</version>
   </parent>
   <groupId>org.ruleml.psoa</groupId>
   <artifactId>psoaruleml-api</artifactId>
@@ -14,6 +14,7 @@
       from the XML schemas based on PSOA RuleML/XML language and converts
       the RuleML/XML syntax into PSOA Presetation Syntax.
   </description>    
+  
   <licenses>
       <license>
           <name>GPLv3</name>
@@ -36,4 +37,5 @@
       <url>https://github.com/sadnanalmanir/PSOARuleML-API</url>
     <tag>HEAD</tag>
   </scm>
+
 </project>
