@@ -7,7 +7,7 @@
   </parent>
   <groupId>org.ruleml.psoa</groupId>
   <artifactId>psoaruleml-api</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <packaging>jar</packaging>
   <name>PSOARuleML-API</name>
   <description>A Java API which uses JAXB library to create abstract syntax objects 
@@ -34,6 +34,6 @@
       <connection>scm:git:git@github.com:sadnanalmanir/PSOARuleML-API.git</connection>
       <developerConnection>scm:git:git@github.com:sadnanalmanir/PSOARuleML-API.git</developerConnection>
       <url>https://github.com/sadnanalmanir/PSOARuleML-API</url>
-    <tag>HEAD</tag>
+    <tag>psoaruleml-api-1.1</tag>
   </scm>
 </project>
