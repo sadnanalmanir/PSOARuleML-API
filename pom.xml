@@ -7,7 +7,7 @@
     </parent>  
     <groupId>org.ruleml.psoa</groupId>
     <artifactId>psoaruleml-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <name>PSOARuleML-API</name>
     <description>A Java API which uses JAXB library to create abstract syntax objects 
