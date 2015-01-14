@@ -3,7 +3,7 @@
  
     <groupId>org.ruleml.psoa</groupId>
     <artifactId>psoaruleml-api</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>PSOARuleML-API</name>
     <description>A Java API which uses JAXB library to create abstract syntax objects 
@@ -46,13 +46,13 @@
             <id>localhost-nexus-snapshots</id>
             <name>Local Nexus snapshot repository</name>
             <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
+        </snapshotRepository>        
         <repository>
             <id>localhost-nexus-staging</id>
             <name>Local Nexus release repository</name>
             <url>http://localhost:8081/nexus/content/repositories/releases/</url>
         </repository>
-
+        
     </distributionManagement>
     
     <dependencies>
@@ -152,7 +152,7 @@
 				</configuration>
 			</plugin>
 			
-			<!-- Deployment -->
+			<!-- Deployment 
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -164,7 +164,7 @@
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
-
+                        -->
 		</plugins>
 	</build>
 
