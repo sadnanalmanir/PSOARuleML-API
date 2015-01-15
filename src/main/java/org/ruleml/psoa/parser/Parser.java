@@ -109,7 +109,7 @@ public class Parser {
      *
      * @param directives
      * @param absSynFactory
-     * @return
+     * @return import directives
      */
     private Iterable<Import> convertDirective(
             List<org.ruleml.psoa.parser.jaxb.Directive> directives,
@@ -1112,7 +1112,7 @@ public class Parser {
      * @param expr to be parsed as expression
      * @param absSynFactory factory of abstract syntax objects to be used to
      * create the parsed objects to create expression
-     * @return
+     * @return an expression
      */
     private Term convert(Expr expr, AbstractSyntax absSynFactory) {
 

@@ -587,24 +587,25 @@ public interface AbstractSyntax {
 
     // createX methods:
     /**
+     * Creates document.
      * @param imports can be null or empty
      * @param group can be null
-     * @return 
+     * @return document
      */
 
     public Document createDocument(Iterable<Import> imports, Group group);
 
     /**
-     * creates document.
+     * Creates import.
      * 
      * @param iri nonnull
      * @param profile can be null or empty
-     * @return document
+     * @return import
      */
     public Import createImport(String iri, Profile profile);
 
     /**
-     * creates import.
+     * Creates import.
      * 
      * @param iri nonnull
      * @return import
@@ -612,7 +613,7 @@ public interface AbstractSyntax {
     public Profile createProfile(String iri);
 
     /**
-     * creates profile.
+     * Creates profile.
      * 
      * @param elements nonnull
      * @return profile
@@ -620,7 +621,7 @@ public interface AbstractSyntax {
     public Group createGroup(Iterable<GroupElement> elements);
 
     /**
-     * creates Group.
+     * Creates Group.
      * 
      * @param vars can be null or empty
      * @param matrix nonnull
@@ -629,7 +630,7 @@ public interface AbstractSyntax {
     public Rule createRule(Iterable<Var> vars, Clause matrix);
 
     /**
-     * creates rule.
+     * Creates rule.
      * 
      * @param implication nonnull
      * @return rule
@@ -690,7 +691,7 @@ public interface AbstractSyntax {
             Formula matrix);
 
     /**
-     * creates external atomic formula.
+     * Creates external atomic formula.
      * 
      * @param atom nonnull
      * @return external atomic formula
@@ -698,7 +699,7 @@ public interface AbstractSyntax {
     public Formula_External createFormula_External(Atom atom);
 
     /**
-     * creates an atomic formula.
+     * Creates an atomic formula.
      * 
      * @param term nonnull
      * @return atomic formula
@@ -706,7 +707,7 @@ public interface AbstractSyntax {
     public Atom createAtom(Psoa term);
 
     /**
-     * creates equality expression.
+     * Creates equality expression.
      * 
      * @param lhs nonnull
      * @param rhs nonnull
@@ -715,7 +716,7 @@ public interface AbstractSyntax {
     public Equal createEqual(Term lhs, Term rhs);
 
     /**
-     * creates subclass expression.
+     * Creates subclass expression.
      * 
      * @param sub nonnull
      * @param sup nonnull
@@ -724,7 +725,7 @@ public interface AbstractSyntax {
     public Subclass createSubclass(Term sub, Term sup);
 
     /**
-     * creates a psoa term.
+     * Creates a psoa term.
      * 
      * @param object nonnull
      * @param classTerm nonnull
@@ -736,7 +737,7 @@ public interface AbstractSyntax {
             Iterable<Slot> slots);
 
     /**
-     * creates argument (tuple).
+     * Creates argument (tuple).
      * 
      * @param terms nonnull
      * @return argument (tuple)
@@ -744,7 +745,7 @@ public interface AbstractSyntax {
     public Tuple createTuple(Iterable<Term> terms);
 
     /**
-     * creates slot as a name value pair
+     * Creates slot as a name value pair
      * 
      * @param name nonnull
      * @param value nonnull
@@ -753,7 +754,7 @@ public interface AbstractSyntax {
     public Slot createSlot(Term name, Term value);
 
     /**
-     * creates typed literal constants.
+     * Creates typed literal constants.
      * 
      * @param literal nonnull
      * @param symspace nonnull
@@ -762,7 +763,7 @@ public interface AbstractSyntax {
     public Const_Literal createConst_Literal(String literal, Symspace symspace);
 
     /**
-     * creates untyped constants.
+     * Creates untyped constants.
      * 
      * @param name nonnull
      * @return untyped constants
@@ -770,14 +771,14 @@ public interface AbstractSyntax {
     public Const_Constshort createConst_Constshort(String name);
 
     /**
-     * creates a variable.
+     * Creates a variable.
      * 
      * @param name can be null or "" for anonymous variables.
      * @return variable
      */
     public Var createVar(String name);
     /**
-    * creates external psoa atom.
+    * Creates external psoa atom.
     * 
     * @param externalexpr nonnull
     * @return external psoa atom
@@ -785,6 +786,7 @@ public interface AbstractSyntax {
     public External createExternalExpr(Psoa externalexpr);
 
     /**
+     * Creates type of constants.
      * 
      * @param value nonnull
      * @return type of constant
