@@ -120,7 +120,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		private String _iri;
 
-	}
+	} // class Profile
 
 	/****************************************************************************
 	 ************************* Group *********************************
@@ -145,17 +145,6 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 			return _groupElement;
 		}
 
-		/**
-		 * Should not be called.
-		 * 
-		 * @throws RuntimeException
-		 *             always
-		 */
-		// public Group asGroup() { throw new
-		// RuntimeException("asGroup() should never be called on a Group."); }
-		// public Rule asRule() { throw new
-		// RuntimeException("asRule() should never be called on a Group."); }
-
 		public String toString() {
 			return toString("");
 		}
@@ -178,7 +167,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 	/****************************************************************************
 	 ************************* GroupElement ***************************
 	 *****************************************************************************/
-	/* changed to abstract */
+
 	public static abstract class GroupElement implements
 			AbstractSyntax.GroupElement {
 
@@ -230,19 +219,12 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 			return _clause;
 		}
 
-		// public Group asGroup() { throw new
-		// RuntimeException("asGroup() should never be called in a Rule.");}
-
-		// public Rule asRule() { return this; }
-
 		public String toString() {
 			return toString("");
 		}
 
 		public String toString(String indent) {
-			//Set<AbstractSyntax.Var> vars = new HashSet(_variables);
                         Set<AbstractSyntax.Var> vars = new TreeSet<AbstractSyntax.Var>(_variables);
-			// System.out.println(vars);
 			if (!vars.isEmpty()) {
 				String result = indent + "Forall ";
 				for (AbstractSyntax.Var v : vars)
@@ -321,21 +303,19 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 			assert heads != null;
 			assert heads.iterator().hasNext();
 			_heads = new LinkedList<AbstractSyntax.Head>();
-			// System.out.println("calling from implies constructor");
-			for (AbstractSyntax.Head h : heads) {
+
+                        for (AbstractSyntax.Head h : heads) {
 				_heads.addLast(h);
 				// System.out.println("  individual head :" +h);
 			}
 			_body = condition;
 		}
 
-		public Collection<? extends AbstractSyntax.Head> getHead() {
-			// System.out.println("calling gethead");
+		public Collection<? extends AbstractSyntax.Head> getHead() {			
 			return _heads;
 		}
 
 		public AbstractSyntax.Formula getBody() {
-			// System.out.println("calling getbody");
 			return _body;
 		}
 
@@ -345,9 +325,6 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 			if (_body != null)
 				result.addAll(_body.variables());
 			for (AbstractSyntax.Head h : _heads) {
-				// old result.addAll(((psoa.ruleml.AbstractSyntax.Var)
-				// _heads).variables());
-				// System.out.println("calling from implies :"+h.variables());
 				result.addAll(h.variables());
 			}
 			return result;
@@ -395,8 +372,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		public AbstractSyntax.Atom asAtom() {
 			assert this instanceof AbstractSyntax.Atom;
-			return (AbstractSyntax.Atom) this; // could be return
-			// (AbstractSyntax.Atom)this;
+			return (AbstractSyntax.Atom) this;
 		}
 
 		public AbstractSyntax.Equal asEqual() {
@@ -417,7 +393,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		public abstract String toString(String indent);
 
-	}
+	} // class Atomic
 
 	/****************************************************************************
 	 ************************* Head *********************************
@@ -433,9 +409,6 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 					_variables.addLast(var);
 				}
 			}
-
-			// System.out.println("variables in Head constructor "+_variables
-			// +"----"+variables);
 			_atomic = matrix;
 		}
 
@@ -451,9 +424,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		/** The set of all free variables in the head. */
 		public Set<AbstractSyntax.Var> variables() {
 			Set<AbstractSyntax.Var> result = _atomic.variables();
-			// System.out.println("result :"+result);
 			result.removeAll(_variables);
-			// System.out.println("after removal : "+result);
 			return result;
 		}
 
@@ -463,49 +434,19 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		public String toString(String indent) {
 			String result = "";
-			// System.out.println("Now implementing changed"+getAtomic() +
-			// " --variables list: "+_variables);
 			if (_variables.size() > 0) {
 				result = indent  + "Exists ";
 				for (AbstractSyntax.Var v : _variables)
 					result += v.toString("") + " ";
 				
-				// original
-				//result += "\n" + indent + "("+ getAtomic().toString(indent + " ") + indent + "\n" + indent + ")";
 				result += "\n" + indent + "(" + "\n" + indent + "  "
 						+ getAtomic().toString("") + "\n"
 						+ indent + ")";
-				// getAtomic().variables();
-				// _variables.removeAll(_variables);
-				// System.out.println("after removal"+_variables);
 				return result;
 			}
-			// there shouldn't be any parenthesis,
-
-			// else
-			// return getAtomic().toString(indent);
-			// result += "\n" + indent + " (" + getAtomic().toString(indent +
-			// "  ")
-			// + indent + "\n" + indent + " )";
-			
-			//old pretty printing
-			//result = "\n" + indent + getAtomic().toString(" ")
-				//	+ indent + "\n" + indent;
 			result = indent + getAtomic().toString(" ");
 			return result;
 		}
-
-		/*
-		 * old code public String toString(String indent) {
-		 * Set<AbstractSyntax.Var> vars = getAtomic().variables(); if
-		 * (!vars.isEmpty()) { String result = indent + "Exists "; for
-		 * (AbstractSyntax.Var v : vars) result += v.toString("") + " "; result
-		 * += "\n" + indent + " (\n" + getAtomic().toString(indent + "   ") +
-		 * "\n" + indent + " )"; return result; } else return
-		 * getAtomic().toString(indent);
-		 * 
-		 * } // toStringInPresSyntax(String indent)
-		 */
 
 		private LinkedList<AbstractSyntax.Var> _variables;
 		private AbstractSyntax.Atomic _atomic;
@@ -513,11 +454,8 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 	} // class Head
 
-	/****************************************************************************
-	 ************************* Profile *********************************
-	 *****************************************************************************/
 
-	/****************************************************************************
+        /****************************************************************************
 	 ************************* Formula *********************************
 	 *****************************************************************************/
 	public static abstract class Formula implements AbstractSyntax.Formula {
@@ -594,10 +532,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		public String toString(String indent) {
 			String result = indent + "And\n" + indent + "(";
-			// if formulas are empty
-			// if (_formulas.isEmpty())
-			// return result + ")";
-
+	
 			for (AbstractSyntax.Formula f : _formulas)
 				result += "\n" + f.toString(indent + "  ");
 			result += "\n" + indent + ")";
@@ -649,10 +584,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		public String toString(String indent) {
 			String result = indent + "Or\n" + indent + "(";
-			// if formulas are empty
-			// if (_formulas.isEmpty())
-			// return result + ")";
-
+	
 			for (AbstractSyntax.Formula f : _formulas)
 				result += "\n" + indent + f.toString(indent + "  ");
 			result += "\n" + indent + ")";
@@ -693,31 +625,14 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		public Set<AbstractSyntax.Var> variables() {
 			Set<AbstractSyntax.Var> result = _formula.variables();
 			result.removeAll(_variables);
-			return result; // returns free variables by removing existentially
-			// quantified variables
+			return result; 
+			
 		}
 
 		public String toString() {
 			return toString("");
 		}
 
-		/*
-		 * public String toString(String indent) { //Just like interface HEAD
-		 * toString(indent) this will NOT print the declared variables //if
-		 * there are not present inside formula, toString method in
-		 * Formula_Exist ensures that all the declared variables //are also
-		 * present inside formula e.g.,
-		 * and,or,exists,external,atom,subclass,equal // if it is not required
-		 * to check, then switch back to the old code below, do the same // for
-		 * 'Exists' Var+ (Atomic) too Set<AbstractSyntax.Var> vars =
-		 * getFormula().variables(); if (!vars.isEmpty()){
-		 * System.out.println("size inside :"+vars.size() +
-		 * "size outside :"+_variables.size()); String result = indent +
-		 * "Exists "; for (AbstractSyntax.Var v : vars) result += v.getName() +
-		 * " "; result += "\n" + indent + " (" + _formula.toString(indent +
-		 * "  ") + indent + "\n" + indent + " )"; return result; } else return
-		 * getFormula().toString(indent); }
-		 */
 		public String toString(String indent) {
 			String result = indent + "Exists ";
 			for (AbstractSyntax.Var v : _variables)
@@ -966,18 +881,13 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 			String result = indent + _object.toString("") + "#"
 					+ _classTerm.toString("") + "(";
 
-			//result += iterableToStringIfNonEmpty(_tuples, indent, "" + indent + "")
-					//+ iterableToStringIfNonEmpty(_slots, indent, "" + indent+ "") + ")"
-				//	;
 			int numOfTuples = _tuples.size();
 			
 			if(_tuples.size()>1){
 				for(AbstractSyntax.Tuple tuple : _tuples){
-				//if (!slot.equals(_slots.getLast()) )
+
 					result += numOfTuples > 1 ? "[" + tuple.toString("") + "] " : "[" + tuple.toString("") + "]";
 					numOfTuples--;
-				//else
-					//result += slot.toString("");
 				}
 			}
 			if(_tuples.size() == 1){
@@ -1085,18 +995,16 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		public String toString(String indent) {
 			
-			//if(_terms.size() > 1){
-			
 			String result = "";		
 			for (AbstractSyntax.Term t : _terms){
-				// add space in between elements until the last element is printed
+
 				if (!t.equals(_terms.getLast()) )
 					result += t.toString("") + " ";
 				else
 					result += t.toString("");
 			}
 			return result;
-			//}
+
 		}
 
 		private LinkedList<AbstractSyntax.Term> _terms;
@@ -1171,8 +1079,8 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 			AbstractSyntax.Const_Literal {
 
 		public Const_Literal(String literal, AbstractSyntax.Symspace symspace) {
-			assert literal != null; // is this right here without implementing
-			// Const interface !!
+			assert literal != null; 
+
 			_literal = literal;
 			_symspace = symspace;
 		}
@@ -1186,7 +1094,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 		public Set<AbstractSyntax.Var> variables() {
-			return new TreeSet<AbstractSyntax.Var>(); // not sure about it
+			return new TreeSet<AbstractSyntax.Var>();
 		}
 
 		public String toString() {
@@ -1202,8 +1110,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		private AbstractSyntax.Symspace _symspace;
 
 		@Override
-		public int compareTo(org.ruleml.psoa.absyntax.AbstractSyntax.Term t) {
-			// TODO Auto-generated method stub
+		public int compareTo(org.ruleml.psoa.absyntax.AbstractSyntax.Term t) {			
 			return 0;
 		}
 
@@ -1255,7 +1162,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 		public Set<AbstractSyntax.Var> variables() {
-			return new TreeSet<AbstractSyntax.Var>(); // not sure about it
+			return new TreeSet<AbstractSyntax.Var>();
 		}
 
 		public String toString() {
@@ -1267,12 +1174,10 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 		private String _name;
-		// adding the type
-		//private String _symspace;
 		
 		@Override
 		public int compareTo(org.ruleml.psoa.absyntax.AbstractSyntax.Term t) {
-			// TODO Auto-generated method stub
+
 			return 0;
 		}
 
@@ -1335,7 +1240,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 		public abstract Set<AbstractSyntax.Var> variables();
 
-	}
+	} // class Expr
 
 	/****************************************************************************
 	 ************************* External *********************************
@@ -1373,24 +1278,25 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		}
 
 
-	}
+	} // class External
 
 	// createX methods:
 
 	/**
-	 * @param base
-	 *            can be null
-	 * @param prefixes
-	 *            can be null or empty
-	 * @param imports
-	 *            can be null or empty
-	 * @param group
-	 *            can be null
-	 */
+         * 
+         * @param imports can be null
+         * @param group non-null
+         * @return Document
+         */
 	public AbstractSyntax.Document createDocument(Iterable<AbstractSyntax.Import> imports, AbstractSyntax.Group group) {
 		return new Document(imports, group);
 	}
-
+        /**
+         * 
+         * @param iri document iri
+         * @param profile 
+         * @return Import
+         */
 	public AbstractSyntax.Import createImport(String iri,
 			AbstractSyntax.Profile profile) {
 		return new Import(iri, profile);
@@ -1416,6 +1322,10 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		return new Rule(vars, matrix);
 	}
 
+        /**       
+         * @param implication
+         * @return 
+         */
 	public AbstractSyntax.Clause createClause(AbstractSyntax.Implies implication) {
 		return new Clause(implication);
 	}
@@ -1547,10 +1457,6 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		return new Const_Constshort(name);
 	}
 	
-	
-	
-	
-	
 
 	/**
 	 * @param name
@@ -1560,19 +1466,13 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 		return new Var(name);
 	}
 
-	/*
-	 * public AbstractSyntax.Expr createExpr(AbstractSyntax.Term object,
-	 * AbstractSyntax.Term classTerm, Iterable<AbstractSyntax.Tuple> tuples,
-	 * Iterable<AbstractSyntax.Slot> slots) { return new
-	 * Expr(object,classTerm,tuples,slots); }
-	 */
 
 	public AbstractSyntax.External createExternalExpr(
 			AbstractSyntax.Psoa externalexpr) {
 		return new External(externalexpr);
 	}
 
-	/** Temporary plug. What is CURIE? */
+
 	public AbstractSyntax.Symspace createSymspace(String value) {
 		return new Symspace(value);
 	}
@@ -1616,7 +1516,7 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
 	} // iterableToStringIfNonEmpty(Iterable<? extends AbstractSyntax.Construct
 
-	// iterable,
+	
  // iterableToStringIfNonEmpty(Iterable<? extends AbstractSyntax.Construct
 
 } // class DefaultAbstractSyntax

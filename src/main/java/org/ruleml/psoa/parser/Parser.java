@@ -6,15 +6,12 @@ import java.util.*;
 import java.net.*;
 
 import javax.xml.bind.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.validation.*;
 
 import org.ruleml.psoa.absyntax.AbstractSyntax;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Atom;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Atomic;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Clause;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Equal;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Formula;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Formula_External;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Group;
@@ -30,11 +27,6 @@ import org.ruleml.psoa.absyntax.AbstractSyntax.Symspace;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Term;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Tuple;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Var;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
-import org.ruleml.psoa.vocab.Namespaces;
 import org.ruleml.psoa.vocab.PsoaDatatype;
 import org.ruleml.psoa.vocab.XMLSchemaDatatype;
 
@@ -99,11 +91,12 @@ public class Parser {
 		}
 	}
 
-	/**
-	 * @param import1
-	 * @param absSynFactory
-	 * @return
-	 */
+        /**
+         * 
+         * @param directives
+         * @param absSynFactory
+         * @return 
+         */
 
 	private Iterable<Import> convertDirective(
 			List<org.ruleml.psoa.parser.jaxb.Directive> directives,
@@ -1130,15 +1123,11 @@ public class Parser {
 				.getContent().getExpr(), absSynFactory));
 	}
 
-	/**
-	 * 
-	 * @param expr
-	 *            to be parsed as expression
-	 * @param absSynFactory
-	 *            factory of abstract syntax objects to be used to create the
-	 *            parsed objects to create expression
-	 * @return
-	 */
+        /**
+         * @param expr to be parsed as expression
+         * @param absSynFactory factory of abstract syntax objects to be used to create the parsed objects to create expression
+         * @return 
+         */
 	private Term convert(Expr expr, AbstractSyntax absSynFactory) {
 
 		if (expr.getOid() != null && expr.getOp() != null
