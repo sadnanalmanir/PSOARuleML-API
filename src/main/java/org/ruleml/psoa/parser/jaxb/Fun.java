@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -31,6 +33,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;group ref="{http://psoa.ruleml.org/lang/spec#}IRIMETA" minOccurs="0"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="type" use="required" type="{http://www.w3.org/2001/XMLSchema}anyURI" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -42,8 +45,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "content"
 })
-@XmlRootElement(name = "Var")
-public class Var {
+@XmlRootElement(name = "Fun")
+public class Fun {
 
     @XmlElementRefs({
         @XmlElementRef(name = "meta", namespace = "http://psoa.ruleml.org/lang/spec#", type = Meta.class),
@@ -51,6 +54,9 @@ public class Var {
     })
     @XmlMixed
     protected List<Object> content;
+    @XmlAttribute(name = "type", required = true)
+    @XmlSchemaType(name = "anyURI")
+    protected String type;
 
     /**
      * Gets the value of the content property.
@@ -81,6 +87,30 @@ public class Var {
             content = new ArrayList<Object>();
         }
         return this.content;
+    }
+
+    /**
+     * Gets the value of the type property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets the value of the type property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setType(String value) {
+        this.type = value;
     }
 
 }

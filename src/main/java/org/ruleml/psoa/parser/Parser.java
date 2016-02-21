@@ -1,56 +1,56 @@
 /**
  * This file is part of PSOARuleML-API.
- *
- *  PSOARuleML-API is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  PSOARuleML-API is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with PSOARuleML-API.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * PSOARuleML-API is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * PSOARuleML-API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with PSOARuleML-API.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.ruleml.psoa.parser;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-
-import javax.xml.bind.*;
-import javax.xml.validation.*;
-
 import org.ruleml.psoa.absyntax.AbstractSyntax;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Atom;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Atomic;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Clause;
+import org.ruleml.psoa.absyntax.AbstractSyntax.*;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Formula;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Formula_External;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Group;
-import org.ruleml.psoa.absyntax.AbstractSyntax.GroupElement;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Head;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Implies;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Import;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Profile;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Psoa;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Slot;
+import org.ruleml.psoa.absyntax.AbstractSyntax.Sentence;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Subclass;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Symspace;
-import org.ruleml.psoa.absyntax.AbstractSyntax.Term;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Tuple;
 import org.ruleml.psoa.absyntax.AbstractSyntax.Var;
+import org.ruleml.psoa.parser.jaxb.*;
+import org.ruleml.psoa.parser.jaxb.Document;
+import org.ruleml.psoa.parser.jaxb.Expr;
 import org.ruleml.psoa.vocab.PsoaDatatype;
 import org.ruleml.psoa.vocab.XMLSchemaDatatype;
 
-import org.ruleml.psoa.parser.jaxb.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.File;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author Mohammad Sadnan Al Manir
- * University of New Brunswick
+ *         University of New Brunswick
  */
 public class Parser {
+
+    private Unmarshaller _unmarshaller;
+    private Marshaller _marshaller;
 
     public Parser() throws java.lang.Exception {
 
@@ -65,9 +65,9 @@ public class Parser {
     }
 
     /**
-     * @param file to be parsed
+     * @param file          to be parsed
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects
+     *                      create the parsed objects
      */
     public AbstractSyntax.Document parse(File file, AbstractSyntax absSynFactory)
             throws java.lang.Exception {
@@ -84,10 +84,10 @@ public class Parser {
                             .getGroup();
                     return absSynFactory
                             .createDocument(
-                            convertDirective(directive,
-                            absSynFactory),
-                            (Group) convert(topLevelGroup,
-                            absSynFactory));
+                                    convertDirective(directive,
+                                            absSynFactory),
+                                    (Group) convert(topLevelGroup,
+                                            absSynFactory));
                 }
             } else {
 
@@ -106,9 +106,8 @@ public class Parser {
     }
 
     /**
-     *
-     * @param directives
-     * @param absSynFactory
+     * @param directives    list of directives
+     * @param absSynFactory factory instance
      * @return import directives
      */
     private Iterable<Import> convertDirective(
@@ -135,9 +134,8 @@ public class Parser {
 
         if (!profile.isEmpty()) {
             return absSynFactory.createProfile(profile);
-        } else {
+        } else
             throw new Error("Bad instance of Profile");
-        }
     }
 
     /**
@@ -145,17 +143,16 @@ public class Parser {
      *
      * @param topLevelGroup Group or nested Groups
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Groups
+     *                      create the parsed objects to create Groups
      * @return Group or nested Groups
      */
-    private AbstractSyntax.GroupElement convert(
+    private AbstractSyntax.Sentence convert(
             org.ruleml.psoa.parser.jaxb.Group topLevelGroup,
             AbstractSyntax absSynFactory) {
 
-        LinkedList<AbstractSyntax.GroupElement> grpElements = new LinkedList<AbstractSyntax.GroupElement>();
-        for (Sentence grpelm : topLevelGroup.getSentence()) {
+        LinkedList<AbstractSyntax.Sentence> grpElements = new LinkedList<AbstractSyntax.Sentence>();
+        for (org.ruleml.psoa.parser.jaxb.Sentence grpelm : topLevelGroup.getSentence())
             grpElements.addLast(convert(grpelm, absSynFactory));
-        }
 
         return absSynFactory.createGroup(grpElements);
     }
@@ -163,12 +160,12 @@ public class Parser {
     /**
      * *********************************************************
      *
-     * @param grpelm each fact or rule to be parsed
+     * @param grpelm        each fact or rule to be parsed
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Groupelement
+     *                      create the parsed objects to create Groupelement
      * @return Groupelement as fact or rule
      */
-    private GroupElement convert(Sentence grpelm, AbstractSyntax absSynFactory) {
+    private Sentence convert(org.ruleml.psoa.parser.jaxb.Sentence grpelm, AbstractSyntax absSynFactory) {
 
         if (grpelm.getForall() != null) {
             Iterable<AbstractSyntax.Var> vars = convertVars(grpelm.getForall()
@@ -209,7 +206,7 @@ public class Parser {
         }
 
         if (grpelm.getGroup() != null) {
-            AbstractSyntax.GroupElement gr = convert(grpelm.getGroup(),
+            AbstractSyntax.Sentence gr = convert(grpelm.getGroup(),
                     absSynFactory);
             AbstractSyntax.Group g = (Group) gr;
 
@@ -220,16 +217,14 @@ public class Parser {
     }
 
     /**
-     *
-     * @param implies to be parsed as Implication
+     * @param implies       to be parsed as Implication
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Implication
+     *                      create the parsed objects to create Implication
      * @return Clause as Implication containing both Conditions and Conclusion
      * or only Conclusion as an Atomic formula or Conjunction of Atomic formulas
-     *
      */
     private Clause convert(org.ruleml.psoa.parser.jaxb.Implies implies,
-            AbstractSyntax absSynFactory) {
+                           AbstractSyntax absSynFactory) {
 
         AbstractSyntax.Formula cond = convert(implies.getIf(), absSynFactory);
         LinkedList<AbstractSyntax.Head> heads = convert(implies.getThen(),
@@ -290,28 +285,24 @@ public class Parser {
                             absSynFactory);
                     heads.add(absSynFactory.createHead(vars, atomic));
                     vars = null;
-                } else {
+                } else
                     throw new Error("Bad instance of FormulaAndThenType");
-                }
             }
-
-        } else {
+        } else
             throw new Error("bad instance of Then");
-        }
 
         return heads;
     }
 
     /**
-     *
-     * @param formula to be parsed as Atomic formulas as Atom, Equality or
-     * Subclass
+     * @param formula       to be parsed as Atomic formulas as Atom, Equality or
+     *                      Subclass
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Atomic formula
+     *                      create the parsed objects to create Atomic formula
      * @return Atomic formulas as Atom, Equal or Subclass
      */
     private Atomic convert(FormulaExistsThenType formula,
-            AbstractSyntax absSynFactory) {
+                           AbstractSyntax absSynFactory) {
 
         AbstractSyntax.Atomic atomic;
 
@@ -321,18 +312,16 @@ public class Parser {
             atomic = convert(formula.getEqual(), absSynFactory);
         } else if (formula.getSubclass() != null) {
             atomic = convert(formula.getSubclass(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of FormulaExistsThenType");
-        }
 
         return atomic;
     }
 
     /**
-     *
-     * @param con to be parsed as Condition formulas
+     * @param con           to be parsed as Condition formulas
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Condition formulas
+     *                      create the parsed objects to create Condition formulas
      * @return Formula as Atom, Equal, Subclass, Conjunction
      * formulas,disjunction formulas existential formulas, external formulas
      */
@@ -361,30 +350,27 @@ public class Parser {
         } else if (con.getExternal() != null) {
             body = convert(con.getExternal(), absSynFactory);
             return body;
-        } else {
+        } else
             throw new Error("Bad instance of If");
-        }
     }
 
     /**
-     *
-     * @param external to be parsed as external formula
+     * @param external      to be parsed as external formula
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create external formulas
+     *                      create the parsed objects to create external formulas
      * @return Formula_External as external formula
      */
     private Formula_External convert(ExternalFORMULAType external,
-            AbstractSyntax absSynFactory) {
+                                     AbstractSyntax absSynFactory) {
 
         return absSynFactory.createFormula_External(convert(external
                 .getContent().getAtom(), absSynFactory));
     }
 
     /**
-     *
-     * @param exists to be parsed as existential formula
+     * @param exists        to be parsed as existential formula
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Exist formula
+     *                      create the parsed objects to create Exist formula
      * @return Formula as formula with existentially quantified variables
      */
     private Formula convert(Exists exists, AbstractSyntax absSynFactory) {
@@ -398,16 +384,15 @@ public class Parser {
     }
 
     /**
-     *
-     * @param formula to be parsed as any or all of conjunction, disjunction,
-     * existential, external or atomic formula
+     * @param formula       to be parsed as any or all of conjunction, disjunction,
+     *                      existential, external or atomic formula
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create formulas
+     *                      create the parsed objects to create formulas
      * @return Formula as Atomic, External, Existentially quantified formula, or
      * conjunction, disjunction of those formulas
      */
     private Formula convert(org.ruleml.psoa.parser.jaxb.Formula formula,
-            AbstractSyntax absSynFactory) {
+                            AbstractSyntax absSynFactory) {
 
         if (formula.getAnd() != null) {
             return convert(formula.getAnd(), absSynFactory);
@@ -423,17 +408,15 @@ public class Parser {
             return convert(formula.getEqual(), absSynFactory);
         } else if (formula.getSubclass() != null) {
             return convert(formula.getSubclass(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Formula");
-        }
 
     }
 
     /**
-     *
-     * @param or to be parsed as disjunction of formulas
+     * @param or            to be parsed as disjunction of formulas
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create disjunction formulas
+     *                      create the parsed objects to create disjunction formulas
      * @return Formula as Disjunction of formulas
      */
     private Formula convert(Or or, AbstractSyntax absSynFactory) {
@@ -455,19 +438,17 @@ public class Parser {
                 orArgs.addLast(convert(form.getExists(), absSynFactory));
             } else if (form.getExternal() != null) {
                 orArgs.addLast(convert(form.getExternal(), absSynFactory));
-            } else {
+            } else
                 throw new Error("Bad instance of Or");
-            }
         }
 
         return absSynFactory.createFormula_Or(orArgs);
     }
 
     /**
-     *
-     * @param and to be parsed as Conjunction of formulas
+     * @param and           to be parsed as Conjunction of formulas
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create disjunction formulas
+     *                      create the parsed objects to create disjunction formulas
      * @return Formulas as Conjunction or formulas
      */
     private Formula convert(And and, AbstractSyntax absSynFactory) {
@@ -489,19 +470,17 @@ public class Parser {
                 andArgs.addLast(convert(form.getExists(), absSynFactory));
             } else if (form.getExternal() != null) {
                 andArgs.addLast(convert(form.getExternal(), absSynFactory));
-            } else {
+            } else
                 throw new Error("Bad instance of and of Formula");
-            }
         }
 
         return absSynFactory.createFormula_And(andArgs);
     }
 
     /**
-     *
-     * @param forall to be parsed as Universally quantified formulas
+     * @param forall        to be parsed as Universally quantified formulas
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create unversally quantified formulas
+     *                      create the parsed objects to create unversally quantified formulas
      * @return Clause as formula with the unviersally quantified variables
      */
     private Clause convert(Forall forall, AbstractSyntax absSynFactory) {
@@ -532,56 +511,92 @@ public class Parser {
             Implies impl = absSynFactory.createImplies(heads, cond);
 
             return absSynFactory.createClause(impl);
+        } else if (form.getExists() != null) {
+
+            Iterable<AbstractSyntax.Var> vars = convertVars(form.getExists().getDeclare(), absSynFactory);
+
+            atomic = convert(form.getExists().getFormula(), absSynFactory);
+
+            AbstractSyntax.Head head = absSynFactory.createHead(vars, atomic);
+
+            return absSynFactory.createClause(head);
         }
 
         return absSynFactory.createClause(atomic);
     }
 
     /**
-     *
-     * @param atom to be parsed as psoa Atom
+     * @param atom          to be parsed as psoa Atom
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Atom
+     *                      create the parsed objects to create Atom
      * @return Atom as a PSOA term composed of membership with optional tuples
      * and slots
      */
     private Atom convert(org.ruleml.psoa.parser.jaxb.Atom atom,
-            AbstractSyntax absSynFactory) {
+                         AbstractSyntax absSynFactory) {
+
 
         if (atom.getOid() != null && atom.getOp() != null
-                && atom.getArgs() != null && atom.getSlot() != null) {
+                && atom.getTuple() != null && !atom.getTuple().isEmpty()
+                && atom.getSlot() != null && !atom.getSlot().isEmpty()) {
+
+
             return absSynFactory
                     .createAtom(convert(atom.getOid(), atom.getOp(),
-                    atom.getArgs(), atom.getSlot(), absSynFactory));
+                            atom.getTuple(), atom.getSlot(), absSynFactory));
         }
         if (atom.getOid() != null && atom.getOp() != null
-                && atom.getArgs() != null) {
+                && atom.getTuple() != null && !atom.getTuple().isEmpty()) {
+
+
             return absSynFactory.createAtom(convert2MemberTuple(atom.getOid(),
-                    atom.getOp(), atom.getArgs(), absSynFactory));
+                    atom.getOp(), atom.getTuple(), absSynFactory));
         }
+        if (atom.getOid() != null && atom.getOp() != null && atom.getINDTERM() != null
+                && atom.getSlot() != null && !atom.getSlot().isEmpty()) {
+
+            return absSynFactory.createAtom(convert2MemberAuxiliaryTupleSlot(atom.getOid(),
+                    atom.getOp(), atom.getINDTERM(), atom.getSlot(), absSynFactory));
+        }
+
         if (atom.getOid() != null && atom.getOp() != null
-                && atom.getSlot() != null) {
+                && atom.getSlot() != null && !atom.getSlot().isEmpty()) {
+
             return absSynFactory.createAtom(convert2MemberSlot(atom.getOid(),
                     atom.getOp(), atom.getSlot(), absSynFactory));
         }
+        if (atom.getOid() != null && atom.getOp() != null && atom.getINDTERM() != null) {
 
-        return absSynFactory.createAtom(convert(atom.getOid(), atom.getOp(),
-                absSynFactory));
+            return absSynFactory.createAtom(convert2MemberAuxiliaryTuple(atom.getOid(),
+                    atom.getOp(), atom.getINDTERM(), absSynFactory));
+        }
+        if (atom.getOid() != null && atom.getOp() != null) {
+
+            return absSynFactory.createAtom(convert(atom.getOid(), atom.getOp(),
+                    absSynFactory));
+        }
+        if (atom.getOp() != null && atom.getTuple() != null && atom.getSlot() != null) {
+
+            return absSynFactory
+                    .createAtom(convert(atom.getOp(),
+                            atom.getTuple(), atom.getSlot(), absSynFactory));
+        }
+        return absSynFactory.createAtom(convert(atom.getOp(), absSynFactory));
     }
 
     /**
-     *
-     * @param member to be parsed as membership with Object ID as instance of a
-     * class
-     * @param tuple to be parsed as positional tuple terms
-     * @param slot to be parsed as name, value pairs
+     * @param oid           to be parsed as membership with Object ID as instance of a
+     *                      class
+     * @param op            to be parsed as the class
+     * @param tuple         to be parsed as positional tuple terms
+     * @param slot          to be parsed as name, value pairs
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create a psoa term with membership including
-     * tuples and slots
+     *                      create the parsed objects to create a psoa term with membership including
+     *                      tuples and slots
      * @return Psoa term containing membership, tuples and slots altogether
      */
-    private Psoa convert(Oid oid, Op op, List<Args> tuple,
-            List<SlotPSOAType> slot, AbstractSyntax absSynFactory) {
+    private Psoa convert(Oid oid, Op op, List<org.ruleml.psoa.parser.jaxb.Tuple> tuple,
+                         List<SlotPSOAType> slot, AbstractSyntax absSynFactory) {
 
         org.ruleml.psoa.parser.jaxb.Oid instance = oid;
         assert instance != null;
@@ -595,27 +610,25 @@ public class Parser {
             inst = convert(instance.getExpr(), absSynFactory);
         } else if (instance.getExternal() != null) {
             inst = convert(instance.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Instance");
-        }
 
         org.ruleml.psoa.parser.jaxb.Op className = op;
         assert className != null;
         AbstractSyntax.Term cls;
 
-        // if (className.getInd() != null) {
-        // cls = convert(className.getInd(), absSynFactory);
         if (className.getRel() != null) {
             cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
         } else if (className.getVar() != null) {
             cls = convert(className.getVar(), absSynFactory);
         } else if (className.getExpr() != null) {
             cls = convert(className.getExpr(), absSynFactory);
         } else if (className.getExternal() != null) {
             cls = convert(className.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Class");
-        }
 
         Iterable<Tuple> tupleTemp = convert2Tuple(tuple, absSynFactory);
         Iterable<Slot> slotTemp = convert2Slot(slot, absSynFactory);
@@ -623,18 +636,44 @@ public class Parser {
         return absSynFactory.createPsoa(inst, cls, tupleTemp, slotTemp);
     }
 
+    private Psoa convert(Op op, List<org.ruleml.psoa.parser.jaxb.Tuple> tuple,
+                         List<SlotPSOAType> slot, AbstractSyntax absSynFactory) {
+
+
+        org.ruleml.psoa.parser.jaxb.Op className = op;
+        assert className != null;
+        AbstractSyntax.Term cls;
+
+        if (className.getRel() != null) {
+            cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
+        } else if (className.getVar() != null) {
+            cls = convert(className.getVar(), absSynFactory);
+        } else if (className.getExpr() != null) {
+            cls = convert(className.getExpr(), absSynFactory);
+        } else if (className.getExternal() != null) {
+            cls = convert(className.getExternal(), absSynFactory);
+        } else
+            throw new Error("Bad instance of Class");
+
+        Iterable<Tuple> tupleTemp = convert2Tuple(tuple, absSynFactory);
+        Iterable<Slot> slotTemp = convert2Slot(slot, absSynFactory);
+
+        return absSynFactory.createPsoa(null, cls, tupleTemp, slotTemp);
+    }
+
     /**
-     *
-     * @param member to be parsed as membership with Object ID as instance of a
-     * class
-     * @param slot to be parsed as name, value pairs
+     * @param oid           to be parsed as Object ID as instance of a class
+     * @param op            to be parsed as the class
+     * @param slot          to be parsed as name, value pairs
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create a psoa term with membership including
-     * slots
+     *                      create the parsed objects to create a psoa term with membership including
+     *                      slots
      * @return Psoa term containing membership and slots
      */
     private Psoa convert2MemberSlot(Oid oid, Op op, List<SlotPSOAType> slot,
-            AbstractSyntax absSynFactory) {
+                                    AbstractSyntax absSynFactory) {
 
         org.ruleml.psoa.parser.jaxb.Oid instance = oid;
         assert instance != null;
@@ -648,27 +687,25 @@ public class Parser {
             inst = convert(instance.getExpr(), absSynFactory);
         } else if (instance.getExternal() != null) {
             inst = convert(instance.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Instance");
-        }
 
         org.ruleml.psoa.parser.jaxb.Op className = op;
         assert className != null;
         AbstractSyntax.Term cls;
 
-        // if (className.getInd() != null) {
-        // cls = convert(className.getInd(), absSynFactory);
         if (className.getRel() != null) {
             cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
         } else if (className.getVar() != null) {
             cls = convert(className.getVar(), absSynFactory);
         } else if (className.getExpr() != null) {
             cls = convert(className.getExpr(), absSynFactory);
         } else if (className.getExternal() != null) {
             cls = convert(className.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Class");
-        }
 
         Iterable<Slot> slotTemp = convert2Slot(slot, absSynFactory);
 
@@ -676,14 +713,13 @@ public class Parser {
     }
 
     /**
-     *
-     * @param slot to be parsed as name, value pairs
+     * @param slot          to be parsed as name, value pairs
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create sequence of slots
+     *                      create the parsed objects to create sequence of slots
      * @return sequence of Slots as name, value pairs
      */
     private List<Slot> convert2Slot(List<SlotPSOAType> slot,
-            AbstractSyntax absSynFactory) {
+                                    AbstractSyntax absSynFactory) {
 
         LinkedList<AbstractSyntax.Slot> result = new LinkedList<AbstractSyntax.Slot>();
         AbstractSyntax.Term name = null;
@@ -733,17 +769,55 @@ public class Parser {
     }
 
     /**
-     *
-     * @param member to be parsed as membership with Object ID as instance of a
-     * class
-     * @param tuple to be parsed as positional tuple terms
+     * @param oid           to be parsed as Object ID as instance of a class
+     * @param op            to be parsed as the class
+     * @param tuple         to be parsed as positional tuple terms
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create a psoa term with membership including
-     * tuples
+     *                      create the parsed objects to create a psoa term with membership including
+     *                      tuples
      * @return Psoa term containing membership and tuples
      */
-    private Psoa convert2MemberTuple(Oid oid, Op op, List<Args> tuple,
-            AbstractSyntax absSynFactory) {
+    private Psoa convert2MemberTuple(Oid oid, Op op, List<org.ruleml.psoa.parser.jaxb.Tuple> tuple,
+                                     AbstractSyntax absSynFactory) {
+        org.ruleml.psoa.parser.jaxb.Oid instance = oid;
+        assert instance != null;
+        AbstractSyntax.Term inst;
+
+        if (instance.getInd() != null) {
+            inst = convert(instance.getInd(), absSynFactory);
+        } else if (instance.getVar() != null) {
+            inst = convert(instance.getVar(), absSynFactory);
+        } else if (instance.getExpr() != null) {
+            inst = convert(instance.getExpr(), absSynFactory);
+        } else if (instance.getExternal() != null) {
+            inst = convert(instance.getExternal(), absSynFactory);
+        } else
+            throw new Error("Bad instance of Instance");
+
+        org.ruleml.psoa.parser.jaxb.Op className = op;
+        assert className != null;
+        AbstractSyntax.Term cls;
+
+        if (className.getRel() != null) {
+            cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
+        } else if (className.getVar() != null) {
+            cls = convert(className.getVar(), absSynFactory);
+        } else if (className.getExpr() != null) {
+            cls = convert(className.getExpr(), absSynFactory);
+        } else if (className.getExternal() != null) {
+            cls = convert(className.getExternal(), absSynFactory);
+        } else
+            throw new Error("Bad instance of Class");
+
+        Iterable<Tuple> tupleTemp = convert2Tuple(tuple, absSynFactory);
+
+        return absSynFactory.createPsoa(inst, cls, tupleTemp, null);
+    }
+
+    private Psoa convert2MemberAuxiliaryTuple(Oid oid, Op op, List<Object> indterm, AbstractSyntax absSynFactory) {
+
 
         org.ruleml.psoa.parser.jaxb.Oid instance = oid;
         assert instance != null;
@@ -757,9 +831,49 @@ public class Parser {
             inst = convert(instance.getExpr(), absSynFactory);
         } else if (instance.getExternal() != null) {
             inst = convert(instance.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Instance");
-        }
+
+        org.ruleml.psoa.parser.jaxb.Op className = op;
+        assert className != null;
+        AbstractSyntax.Term cls;
+
+        if (className.getRel() != null) {
+            cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
+        } else if (className.getVar() != null) {
+            cls = convert(className.getVar(), absSynFactory);
+        } else if (className.getExpr() != null) {
+            cls = convert(className.getExpr(), absSynFactory);
+        } else if (className.getExternal() != null) {
+            cls = convert(className.getExternal(), absSynFactory);
+        } else
+            throw new Error("Bad instance of Class");
+
+        Iterable<Tuple> tupleTemp = convert2Indterm(indterm, absSynFactory);
+
+        return absSynFactory.createPsoa(inst, cls, tupleTemp, null);
+
+    }
+
+    private Psoa convert2MemberAuxiliaryTupleSlot(Oid oid, Op op, List<Object> indterm, List<SlotPSOAType> slot, AbstractSyntax absSynFactory) {
+
+
+        org.ruleml.psoa.parser.jaxb.Oid instance = oid;
+        assert instance != null;
+        AbstractSyntax.Term inst;
+
+        if (instance.getInd() != null) {
+            inst = convert(instance.getInd(), absSynFactory);
+        } else if (instance.getVar() != null) {
+            inst = convert(instance.getVar(), absSynFactory);
+        } else if (instance.getExpr() != null) {
+            inst = convert(instance.getExpr(), absSynFactory);
+        } else if (instance.getExternal() != null) {
+            inst = convert(instance.getExternal(), absSynFactory);
+        } else
+            throw new Error("Bad instance of Instance");
 
         org.ruleml.psoa.parser.jaxb.Op className = op;
         assert className != null;
@@ -769,67 +883,59 @@ public class Parser {
         // cls = convert(className.getInd(), absSynFactory);
         if (className.getRel() != null) {
             cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
         } else if (className.getVar() != null) {
             cls = convert(className.getVar(), absSynFactory);
         } else if (className.getExpr() != null) {
             cls = convert(className.getExpr(), absSynFactory);
         } else if (className.getExternal() != null) {
             cls = convert(className.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Class");
-        }
 
-        Iterable<Tuple> tupleTemp = convert2Tuple(tuple, absSynFactory);
+        Iterable<Tuple> tupleTemp = convert2Indterm(indterm, absSynFactory);
+        Iterable<Slot> slotTemp = convert2Slot(slot, absSynFactory);
 
-        return absSynFactory.createPsoa(inst, cls, tupleTemp, null);
+        return absSynFactory.createPsoa(inst, cls, tupleTemp, slotTemp);
+
     }
 
     /**
-     *
-     * @param tuple to parsed as tuples or positional arguments
+     * @param tuples        to parsed as tuples or positional arguments
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create positional terms as arguments of a
-     * psoa term
+     *                      create the parsed objects to create positional terms as arguments of a
+     *                      psoa term
      * @return sequence of Tuples as positional terms
      */
-    private Iterable<Tuple> convert2Tuple(List<Args> tuples,
-            AbstractSyntax absSynFactory) {
-
-        // assert tuple.getOrdered().equals("yes");
+    private Iterable<Tuple> convert2Tuple(List<org.ruleml.psoa.parser.jaxb.Tuple> tuples,
+                                          AbstractSyntax absSynFactory) {
         LinkedList<AbstractSyntax.Term> termsInTuple = new LinkedList<AbstractSyntax.Term>();
         LinkedList<AbstractSyntax.Tuple> result = new LinkedList<AbstractSyntax.Tuple>();
         AbstractSyntax.Term tup = null;
 
-        for (Args tuple : tuples) {
-            for (java.lang.Object obj : tuple.getTERM()) {
+
+        for (org.ruleml.psoa.parser.jaxb.Tuple tuple : tuples) {
+            for (java.lang.Object obj : tuple.getINDTERM()) {
                 if (obj instanceof org.ruleml.psoa.parser.jaxb.Var) {
                     org.ruleml.psoa.parser.jaxb.Var t = (org.ruleml.psoa.parser.jaxb.Var) obj;
-                    // result.addLast(convert((org.ruleml.psoa.parser.jaxb.Var)
-                    // obj,absSynFactory));
                     tup = convert((org.ruleml.psoa.parser.jaxb.Var) obj,
                             absSynFactory);
                 } else if (obj instanceof org.ruleml.psoa.parser.jaxb.Ind) {
                     org.ruleml.psoa.parser.jaxb.Ind t = (org.ruleml.psoa.parser.jaxb.Ind) obj;
-                    // result.addLast(convert((org.ruleml.psoa.parser.jaxb.Const)
-                    // obj, absSynFactory));
                     tup = convert((org.ruleml.psoa.parser.jaxb.Ind) obj,
                             absSynFactory);
                 } else if (obj instanceof org.ruleml.psoa.parser.jaxb.Expr) {
                     org.ruleml.psoa.parser.jaxb.Expr t = (org.ruleml.psoa.parser.jaxb.Expr) obj;
-                    // result.addLast(convert((org.ruleml.psoa.parser.jaxb.Expr)
-                    // obj, absSynFactory));
                     tup = convert((org.ruleml.psoa.parser.jaxb.Expr) obj,
                             absSynFactory);
                 } else if (obj instanceof org.ruleml.psoa.parser.jaxb.ExternalTERMType) {
                     org.ruleml.psoa.parser.jaxb.ExternalTERMType t = (org.ruleml.psoa.parser.jaxb.ExternalTERMType) obj;
-                    // result.addLast(convert((org.ruleml.psoa.parser.jaxb.ExternalTERMType)
-                    // obj, absSynFactory));
                     tup = convert(
                             (org.ruleml.psoa.parser.jaxb.ExternalTERMType) obj,
                             absSynFactory);
-                } else {
+                } else
                     throw new Error("Bad instance of tuple");
-                }
                 // adding each element
                 termsInTuple.add(tup);
             }
@@ -840,12 +946,49 @@ public class Parser {
         return result;
     }
 
+    private Iterable<Tuple> convert2Indterm(List<Object> indterms,
+                                            AbstractSyntax absSynFactory) {
+
+
+        LinkedList<AbstractSyntax.Term> termsInTuple = new LinkedList<AbstractSyntax.Term>();
+        LinkedList<AbstractSyntax.Tuple> result = new LinkedList<AbstractSyntax.Tuple>();
+        AbstractSyntax.Term tup = null;
+
+        for (java.lang.Object obj : indterms) {
+            if (obj instanceof org.ruleml.psoa.parser.jaxb.Var) {
+                org.ruleml.psoa.parser.jaxb.Var t = (org.ruleml.psoa.parser.jaxb.Var) obj;
+                tup = convert((org.ruleml.psoa.parser.jaxb.Var) obj,
+                        absSynFactory);
+            } else if (obj instanceof org.ruleml.psoa.parser.jaxb.Ind) {
+                org.ruleml.psoa.parser.jaxb.Ind t = (org.ruleml.psoa.parser.jaxb.Ind) obj;
+                tup = convert((org.ruleml.psoa.parser.jaxb.Ind) obj,
+                        absSynFactory);
+            } else if (obj instanceof org.ruleml.psoa.parser.jaxb.Expr) {
+                org.ruleml.psoa.parser.jaxb.Expr t = (org.ruleml.psoa.parser.jaxb.Expr) obj;
+                tup = convert((org.ruleml.psoa.parser.jaxb.Expr) obj,
+                        absSynFactory);
+            } else if (obj instanceof org.ruleml.psoa.parser.jaxb.ExternalTERMType) {
+                org.ruleml.psoa.parser.jaxb.ExternalTERMType t = (org.ruleml.psoa.parser.jaxb.ExternalTERMType) obj;
+                tup = convert(
+                        (org.ruleml.psoa.parser.jaxb.ExternalTERMType) obj,
+                        absSynFactory);
+            } else
+                throw new Error("Bad instance of tuple");
+            // adding each element
+            termsInTuple.add(tup);
+        }
+        result.add(absSynFactory.createTuple(termsInTuple));
+        // empty the terms in that tuple
+        termsInTuple.clear();
+        //}
+        return result;
+    }
+
     /**
-     *
-     * @param member to be parsed as membership with Object ID as instance of a
-     * class
+     * @param oid           to be parsed as Object ID as instance of a class
+     * @param op            to be parsed as the class
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create
+     *                      create the parsed objects to create
      * @return Psoa term containing membership
      */
     private Psoa convert(Oid oid, Op op, AbstractSyntax absSynFactory) {
@@ -862,36 +1005,55 @@ public class Parser {
             inst = convert(instance.getExpr(), absSynFactory);
         } else if (instance.getExternal() != null) {
             inst = convert(instance.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Instance");
-        }
 
         org.ruleml.psoa.parser.jaxb.Op className = op;
         assert className != null;
         AbstractSyntax.Term cls;
 
-        // if (className.getInd() != null) {
-        // cls = convert(className.getInd(), absSynFactory);
         if (className.getRel() != null) {
             cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
         } else if (className.getVar() != null) {
             cls = convert(className.getVar(), absSynFactory);
         } else if (className.getExpr() != null) {
             cls = convert(className.getExpr(), absSynFactory);
         } else if (className.getExternal() != null) {
             cls = convert(className.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Class");
-        }
 
         return absSynFactory.createPsoa(inst, cls, null, null);
+    }
+
+    private Psoa convert(Op op, AbstractSyntax absSynFactory) {
+
+        org.ruleml.psoa.parser.jaxb.Op className = op;
+        assert className != null;
+        AbstractSyntax.Term cls;
+
+        if (className.getRel() != null) {
+            cls = convert(className.getRel(), absSynFactory);
+        } else if (className.getFun() != null) {
+            cls = convert(className.getFun(), absSynFactory);
+        } else if (className.getVar() != null) {
+            cls = convert(className.getVar(), absSynFactory);
+        } else if (className.getExpr() != null) {
+            cls = convert(className.getExpr(), absSynFactory);
+        } else if (className.getExternal() != null) {
+            cls = convert(className.getExternal(), absSynFactory);
+        } else
+            throw new Error("Bad instance of Class");
+
+        return absSynFactory.createPsoa(null, cls, null, null);
     }
 
     private Term convert(Rel rel, AbstractSyntax absSynFactory) {
         for (Object obj : rel.getContent()) {
             if (obj instanceof String) {
                 String unicodeStr = (String) obj;
-                // if the constant is of type psoa local
                 if (PsoaDatatype.existDatatype(rel.getType())) {
                     return absSynFactory.createConst_Constshort(unicodeStr);
                 }// if the constant is any of the types i.e. string, integer
@@ -912,48 +1074,87 @@ public class Parser {
         return null;
     }
 
+    private Term convert(Fun fun, AbstractSyntax absSynFactory) {
+        for (Object obj : fun.getContent()) {
+            if (obj instanceof String) {
+                String unicodeStr = (String) obj;
+                // if the constant is of type psoa local
+                if (PsoaDatatype.existDatatype(fun.getType())) {
+                    return absSynFactory.createConst_Constshort(unicodeStr);
+                }// if the constant is any of the types i.e. string, integer
+                else if (XMLSchemaDatatype.existDatatype(fun.getType())) {
+                    String symspace;
+                    symspace = XMLSchemaDatatype.getShortHandDatatype(fun
+                            .getType());
+                    return absSynFactory.createConst_Literal(unicodeStr,
+                            convert(symspace, absSynFactory));
+                } else {
+                    throw new Error("Datatype " + fun.getType()
+                            + " is not supported");
+                }
+            } else {
+                throw new Error("Bad instance of Fun");
+            }
+        }
+        return null;
+    }
+
     /**
      * *****************************************************
      *
-     * @param subclass to be parsed as Subclass
+     * @param subclass      to be parsed as Subclass
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create subclass
+     *                      create the parsed objects to create subclass
      * @return Subclass with term sub class and super class
      */
     private Subclass convert(org.ruleml.psoa.parser.jaxb.Subclass subclass,
-            AbstractSyntax absSynFactory) {
+                             AbstractSyntax absSynFactory) {
+
 
         Sub sub = subclass.getSub();
         assert sub != null;
 
-        AbstractSyntax.Term subcls;
+        AbstractSyntax.Term subcls = null;
 
-        if (sub.getVar() != null) {
-            subcls = convert(sub.getVar(), absSynFactory);
-        } else if (sub.getInd() != null) {
-            subcls = convert(sub.getInd(), absSynFactory);
-        } else if (sub.getExpr() != null) {
-            subcls = convert(sub.getExpr(), absSynFactory);
-        } else if (sub.getExternal() != null) {
-            subcls = convert(sub.getExternal(), absSynFactory);
-        } else {
-            throw new Error("Bad instance of Sub");
+        if (sub.getOp() != null) {
+            org.ruleml.psoa.parser.jaxb.Op opSub = sub.getOp();
+            assert opSub != null;
+
+
+            if (opSub.getRel() != null) {
+                subcls = convert(opSub.getRel(), absSynFactory);
+            } else if (opSub.getFun() != null) {
+                subcls = convert(opSub.getFun(), absSynFactory);
+            } else if (opSub.getVar() != null) {
+                subcls = convert(opSub.getVar(), absSynFactory);
+            } else if (opSub.getExpr() != null) {
+                subcls = convert(opSub.getExpr(), absSynFactory);
+            } else if (opSub.getExternal() != null) {
+                subcls = convert(opSub.getExternal(), absSynFactory);
+            } else
+                throw new Error("Bad instance of Sub");
         }
 
         Super sup = subclass.getSuper();
         assert sup != null;
-        AbstractSyntax.Term supcls;
+        AbstractSyntax.Term supcls = null;
 
-        if (sup.getVar() != null) {
-            supcls = convert(sup.getVar(), absSynFactory);
-        } else if (sup.getInd() != null) {
-            supcls = convert(sup.getInd(), absSynFactory);
-        } else if (sup.getExpr() != null) {
-            supcls = convert(sup.getExpr(), absSynFactory);
-        } else if (sup.getExternal() != null) {
-            supcls = convert(sup.getExternal(), absSynFactory);
-        } else {
-            throw new Error("Bad instance of Super");
+        if (sup.getOp() != null) {
+            org.ruleml.psoa.parser.jaxb.Op opSup = sup.getOp();
+            assert opSup != null;
+
+            if (opSup.getRel() != null) {
+                supcls = convert(opSup.getRel(), absSynFactory);
+            } else if (opSup.getFun() != null) {
+                supcls = convert(opSup.getFun(), absSynFactory);
+            } else if (opSup.getVar() != null) {
+                supcls = convert(opSup.getVar(), absSynFactory);
+            } else if (opSup.getExpr() != null) {
+                supcls = convert(opSup.getExpr(), absSynFactory);
+            } else if (opSup.getExternal() != null) {
+                supcls = convert(opSup.getExternal(), absSynFactory);
+            } else
+                throw new Error("Bad instance of Super");
         }
 
         return absSynFactory.createSubclass(subcls, supcls);
@@ -962,13 +1163,13 @@ public class Parser {
     /**
      * ******************************************
      *
-     * @param const1 to be parsed as Const
+     * @param ind           to be parsed as Const
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Constant
+     *                      create the parsed objects to create Constant
      * @return short constant or literal constant with type
      */
     private Term convert(Ind ind, AbstractSyntax absSynFactory) {
-        for (java.lang.Object obj : ind.getContent()) {
+        for (java.lang.Object obj : ind.getContent())
             if (obj instanceof String) {
                 String unicodeStr = (String) obj;
                 // if the constant is of type psoa local
@@ -985,39 +1186,34 @@ public class Parser {
                     throw new Error("Datatype " + ind.getType()
                             + " is not supported");
                 }
-            } else {
+            } else
                 throw new Error("Bad instance of Ind");
-            }
-        }
 
         return null;
     }
 
     /**
-     *
-     * @param symspaceStr to be parsed as constant literal type
+     * @param symspaceStr   to be parsed as constant literal type
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create literal type
+     *                      create the parsed objects to create literal type
      * @return Symspace as literal type for literal constant
      */
     private Symspace convert(String symspaceStr, AbstractSyntax absSynFactory) {
 
         if (!symspaceStr.isEmpty()) {
             return absSynFactory.createSymspace(symspaceStr);
-        } else {
+        } else
             throw new Error("bad instance of Symspace");
-        }
     }
 
     /**
-     *
-     * @param declare to be parsed as variable declaration
+     * @param declare       to be parsed as variable declaration
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create variable declaration sequence
+     *                      create the parsed objects to create variable declaration sequence
      * @return sequence of declaration of variables
      */
     private Iterable<Var> convertVars(List<Declare> declare,
-            AbstractSyntax absSynFactory) {
+                                      AbstractSyntax absSynFactory) {
 
         LinkedList<AbstractSyntax.Var> results = new LinkedList<AbstractSyntax.Var>();
 
@@ -1029,14 +1225,13 @@ public class Parser {
     }
 
     /**
-     *
-     * @param var as Variable
+     * @param var           as Variable
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create variable
+     *                      create the parsed objects to create variable
      * @return variable
      */
     private Var convert(org.ruleml.psoa.parser.jaxb.Var var,
-            AbstractSyntax absSynFactory) {
+                        AbstractSyntax absSynFactory) {
 
         for (java.lang.Object obj : var.getContent()) {
             if (obj instanceof String) {
@@ -1050,90 +1245,102 @@ public class Parser {
     /**
      * ***********************************************
      *
-     * @param equal to be parsed as Equal atomic formula
+     * @param equal         to be parsed as Equal atomic formula
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create Equality atomic formula
+     *                      create the parsed objects to create Equality atomic formula
      * @return Equal atomic formula
      */
     private AbstractSyntax.Equal convert(
             org.ruleml.psoa.parser.jaxb.Equal equal,
             AbstractSyntax absSynFactory) {
 
+        String leftItemType, rightItemType;
+
         Left left = equal.getLeft();
         assert left != null;
         AbstractSyntax.Term lhs;
 
+
         if (left.getVar() != null) {
+            leftItemType = "Var";
             lhs = convert(left.getVar(), absSynFactory);
         } else if (left.getInd() != null) {
+            leftItemType = "Ind";
             lhs = convert(left.getInd(), absSynFactory);
         } else if (left.getExpr() != null) {
+            leftItemType = "Expr";
             lhs = convert(left.getExpr(), absSynFactory);
         } else if (left.getExternal() != null) {
+            leftItemType = "External";
             lhs = convert(left.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Left");
-        }
+
 
         Right right = equal.getRight();
         assert right != null;
         AbstractSyntax.Term rhs;
 
+
         if (right.getVar() != null) {
+            rightItemType = "Var";
             rhs = convert(right.getVar(), absSynFactory);
         } else if (right.getInd() != null) {
+            rightItemType = "Ind";
             rhs = convert(right.getInd(), absSynFactory);
         } else if (right.getExpr() != null) {
+            rightItemType = "Expr";
             rhs = convert(right.getExpr(), absSynFactory);
         } else if (right.getExternal() != null) {
+            rightItemType = "External";
             rhs = convert(right.getExternal(), absSynFactory);
-        } else {
+        } else
             throw new Error("Bad instance of Right");
-        }
 
         return absSynFactory.createEqual(lhs, rhs);
     }
 
     /**
-     *
-     * @param external to be parsed as External expression
+     * @param external      to be parsed as External expression
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create external expression
+     *                      create the parsed objects to create external expression
      * @return External atomic expression
      */
     private AbstractSyntax.External convert(ExternalTERMType external,
-            AbstractSyntax absSynFactory) {
+                                            AbstractSyntax absSynFactory) {
 
         return absSynFactory.createExternalExpr((Psoa) convert(external
                 .getContent().getExpr(), absSynFactory));
     }
 
     /**
-     * @param expr to be parsed as expression
+     * @param expr          to be parsed as expression
      * @param absSynFactory factory of abstract syntax objects to be used to
-     * create the parsed objects to create expression
+     *                      create the parsed objects to create expression
      * @return an expression
      */
     private Term convert(Expr expr, AbstractSyntax absSynFactory) {
 
         if (expr.getOid() != null && expr.getOp() != null
-                && expr.getArgs() != null && expr.getSlot() != null) {
-            return convert(expr.getOid(), expr.getOp(), expr.getArgs(),
+                && expr.getTuple() != null && expr.getSlot() != null) {
+            return convert(expr.getOid(), expr.getOp(), expr.getTuple(),
                     expr.getSlot(), absSynFactory);
         } else if (expr.getOid() != null && expr.getOp() != null
-                && expr.getArgs() != null) {
+                && expr.getTuple() != null) {
             return convert2MemberTuple(expr.getOid(), expr.getOp(),
-                    expr.getArgs(), absSynFactory);
+                    expr.getTuple(), absSynFactory);
         } else if (expr.getOid() != null && expr.getOp() != null
                 && expr.getSlot() != null) {
             return convert2MemberSlot(expr.getOid(), expr.getOp(),
                     expr.getSlot(), absSynFactory);
         } else if (expr.getOid() != null && expr.getOp() != null) {
             return convert(expr.getOid(), expr.getOp(), absSynFactory);
-        } else {
+        } else if (expr.getOp() != null && expr.getTuple() != null && expr.getSlot() != null) {
+            return convert(expr.getOp(), expr.getTuple(),
+                    expr.getSlot(), absSynFactory);
+        } else if (expr.getOp() != null) {
+            return convert(expr.getOp(), absSynFactory);
+        } else
             throw new Error("Bad instance of Expr");
-        }
     }
-    private Unmarshaller _unmarshaller;
-    private Marshaller _marshaller;
 }

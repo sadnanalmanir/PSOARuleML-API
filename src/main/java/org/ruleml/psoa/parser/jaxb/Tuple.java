@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -27,9 +29,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{http://psoa.ruleml.org/lang/spec#}declare" maxOccurs="unbounded"/>
- *         &lt;element ref="{http://psoa.ruleml.org/lang/spec#}formula"/>
+ *         &lt;group ref="{http://psoa.ruleml.org/lang/spec#}TUPLEARGS"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="ordered" type="{http://www.w3.org/2001/XMLSchema}string" fixed="yes" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -39,68 +41,81 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "declare",
-    "formula"
+    "indterm"
 })
-@XmlRootElement(name = "Exists")
-public class Exists {
+@XmlRootElement(name = "Tuple")
+public class Tuple {
 
-    @XmlElement(required = true)
-    protected List<Declare> declare;
-    @XmlElement(required = true)
-    protected Formula formula;
+    @XmlElements({
+        @XmlElement(name = "Ind", type = Ind.class),
+        @XmlElement(name = "Rel", type = Rel.class),
+        @XmlElement(name = "Var", type = Var.class),
+        @XmlElement(name = "Expr", type = Expr.class),
+        @XmlElement(name = "External", type = ExternalTERMType.class)
+    })
+    protected List<Object> indterm;
+    @XmlAttribute(name = "ordered")
+    protected String ordered;
 
     /**
-     * Gets the value of the declare property.
+     * Gets the value of the indterm property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the declare property.
+     * This is why there is not a <CODE>set</CODE> method for the indterm property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getDeclare().add(newItem);
+     *    getINDTERM().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Declare }
+     * {@link Ind }
+     * {@link Rel }
+     * {@link Var }
+     * {@link Expr }
+     * {@link ExternalTERMType }
      * 
      * 
      */
-    public List<Declare> getDeclare() {
-        if (declare == null) {
-            declare = new ArrayList<Declare>();
+    public List<Object> getINDTERM() {
+        if (indterm == null) {
+            indterm = new ArrayList<Object>();
         }
-        return this.declare;
+        return this.indterm;
     }
 
     /**
-     * Gets the value of the formula property.
+     * Gets the value of the ordered property.
      * 
      * @return
      *     possible object is
-     *     {@link Formula }
+     *     {@link String }
      *     
      */
-    public Formula getFormula() {
-        return formula;
+    public String getOrdered() {
+        if (ordered == null) {
+            return "yes";
+        } else {
+            return ordered;
+        }
     }
 
     /**
-     * Sets the value of the formula property.
+     * Sets the value of the ordered property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Formula }
+     *     {@link String }
      *     
      */
-    public void setFormula(Formula value) {
-        this.formula = value;
+    public void setOrdered(String value) {
+        this.ordered = value;
     }
 
 }

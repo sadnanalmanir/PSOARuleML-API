@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-  xmlns="http://psoa.ruleml.org/lang/spec#" 
-  targetNamespace="http://psoa.ruleml.org/lang/spec#" 
-  elementFormDefault="qualified" 
-  version="Id: PSOARule.xsd, v. 1.0, 2011-10-19">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://psoa.ruleml.org/lang/spec#"
+           targetNamespace="http://psoa.ruleml.org/lang/spec#"
+           elementFormDefault="qualified"
+           version="Id: PSOARule.xsd, v. 1.0, 2011-10-19">
   <xs:annotation>
     <xs:documentation>
-      
+
       Last updated: 2014-12-29
 
-    This is the tentative XML schema for the Rule Language as defined by
-    the PSOA RuleML Published at http://www.cs.unb.ca/~boley/papers/SemanticsPsoaRules.pdf
+      This is the tentative XML schema for the Rule Language as defined by
+      the PSOA RuleML Published at http://www.cs.unb.ca/~boley/papers/SemanticsPsoaRules.pdf
 
-    The schema is based on the following EBNF for the PSOA Rule Language:
-  
-  Document  ::= 'Document' '(' Base? Prefix* Import* Group? ')'
-  Base      ::= 'Base' '(' ANGLEBRACKIRI ')'
-  Prefix    ::= 'Prefix' '(' Name ANGLEBRACKIRI ')'
-  Import    ::= 'Import' '(' ANGLEBRACKIRI PROFILE? ')'
-  Group     ::= 'Group' '(' (RULE | Group)* ')'
-  RULE      ::= ('Forall' Var+ '(' CLAUSE ')') | CLAUSE
-  CLAUSE    ::= Implies | ATOMIC
-  Implies   ::= (HEAD | 'And' '(' HEAD* ')') ':-' FORMULA
-  HEAD      ::= ATOMIC | 'Exists' Var+ '(' ATOMIC ')'
-  PROFILE   ::= ANGLEBRACKIRI
-      
+      The schema is based on the following EBNF for the PSOA Rule Language:
+
+      Document  ::= 'Document' '(' Base? Prefix* Import* Group? ')'
+      Base      ::= 'Base' '(' ANGLEBRACKIRI ')'
+      Prefix    ::= 'Prefix' '(' Name ANGLEBRACKIRI ')'
+      Import    ::= 'Import' '(' ANGLEBRACKIRI PROFILE? ')'
+      Group     ::= 'Group' '(' (RULE | Group)* ')'
+      RULE      ::= ('Forall' Var+ '(' CLAUSE ')') | CLAUSE
+      CLAUSE    ::= Implies | ATOMIC
+      Implies   ::= (HEAD | 'And' '(' HEAD* ')') ':-' FORMULA
+      HEAD      ::= ATOMIC | 'Exists' Var+ '(' ATOMIC ')'
+      PROFILE   ::= ANGLEBRACKIRI
+
     </xs:documentation>
   </xs:annotation>
   <!-- The Rule Language includes the Condition Language from the same directory -->
@@ -35,6 +35,7 @@
     -->
     <xs:complexType>
       <xs:sequence>
+        <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="directive" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element ref="payload" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
@@ -45,7 +46,7 @@
   Base and Prefix represented directly in XML
     -->
     <xs:complexType>
-      <xs:sequence>        
+      <xs:sequence>
         <xs:element ref="Import"/>
       </xs:sequence>
     </xs:complexType>
@@ -122,7 +123,8 @@
     -->
     <xs:choice>
       <xs:element ref="Implies"/>
-      <xs:group ref="ATOMIC"/>
+      <!--xs:group ref="ATOMIC"/-->
+      <xs:group ref="HEAD"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Implies">
