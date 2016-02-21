@@ -1,4 +1,10 @@
 /pom.xml.releaseBackup
 /psoaruleml-api.iml
 /.idea
-/target/
+/target/checkout
+/target/classes
+/target/generated-sources
+/target/javadoc-bundle-options
+/target/maven-archiver
+/target/maven-status
+/target/surefire
