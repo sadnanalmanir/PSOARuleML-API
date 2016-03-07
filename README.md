@@ -7,17 +7,21 @@ PSOARuleML-API is a Java tool which parses the XML-based concrete syntax (serial
 
 See wiki for details: http://wiki.ruleml.org/index.php/PSOA_RuleML_API
 
+## Javadoc
+
+http://www.javadoc.io/doc/org.ruleml.psoa/psoaruleml-api/1.1
+
 ## Live Demo based on the API
 
 <http://psoa-rulemlapi.rhcloud.com/psoaxml2ps/>
 
 ## Release
 
-Current release: version-1.1
+#####Current release: version-1.1
 
 See wiki for  details: http://wiki.ruleml.org/index.php/PSOA_RuleML_API#Current_Status
 
-Older release: version-1.0
+#####Older release: version-1.0
 
 See wiki for details: http://wiki.ruleml.org/index.php/PSOA_RuleML_API#Deprecated
 
