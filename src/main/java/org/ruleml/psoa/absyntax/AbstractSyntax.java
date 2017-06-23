@@ -19,7 +19,7 @@ package org.ruleml.psoa.absyntax;
 
 import java.util.Collection;
 import java.util.Set;
-
+import org.ruleml.psoa.element.*;
 /**
  * @author Mohammad Sadnan Al Manir, University of New Brunswick, Saint John
  */
@@ -187,10 +187,11 @@ public interface AbstractSyntax {
      * Creates argument (tuple).
      *
      * @param terms nonnull
+     * @param dependency dependent or independent tuples with parental-context sensitivity
      * @return argument (tuple)
      */
-    Tuple createTuple(Iterable<Term> terms);
-
+    //Tuple createTuple(Iterable<Term> terms, boolean dependency);
+    Tuple createTuple(Iterable<Term> terms, TupleType tupleType);
     /**
      * Creates slot as a name value pair
      *
@@ -198,7 +199,7 @@ public interface AbstractSyntax {
      * @param value nonnull
      * @return slot as a name value pair
      */
-    Slot createSlot(Term name, Term value);
+    Slot createSlot(Term name, Term value, SlotType slotType);
 
     /**
      * Creates typed literal constants.
@@ -261,6 +262,8 @@ public interface AbstractSyntax {
          * @return objects in the presentation syntax
          */
         String toString(String indent);
+
+
 
     }
 
@@ -650,6 +653,7 @@ public interface AbstractSyntax {
          * @return nonempty sequence of Arguments
          */
         Collection<? extends Term> getArguments();
+
 
         /**
          * The set of all free variables.

@@ -17,7 +17,7 @@
 package org.ruleml.psoa.absyntax;
 
 import java.util.*;
-
+import org.ruleml.psoa.element.*;
 /**
  * A straightforward implementation of the interfaces in AbstractSyntax that,
  * however, should be sufficiently good for most uses.
@@ -283,10 +283,12 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
      * @param terms nonnull
      * @return argument (tuple)
      */
-    public AbstractSyntax.Tuple createTuple(Iterable<AbstractSyntax.Term> terms) {
-        return new Tuple(terms);
+    //public AbstractSyntax.Tuple createTuple(Iterable<AbstractSyntax.Term> terms, boolean dependency) {
+    //    return new Tuple(terms, dependency);
+    //}
+    public AbstractSyntax.Tuple createTuple(Iterable<AbstractSyntax.Term> terms, TupleType tupleType) {
+        return new Tuple(terms, tupleType);
     }
-
     /**
      * Creates slot as a name value pair
      *
@@ -296,8 +298,8 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
      */
 
     public AbstractSyntax.Slot createSlot(AbstractSyntax.Term name,
-                                          AbstractSyntax.Term value) {
-        return new Slot(name, value);
+                                          AbstractSyntax.Term value, SlotType slotType) {
+        return new Slot(name, value, slotType);
     }
 
     /**
@@ -1256,17 +1258,28 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
             int numOfTuples = _tuples.size();
 
+            /*
             if (_tuples.size() > 1) {
                 for (AbstractSyntax.Tuple tuple : _tuples) {
                     result += numOfTuples > 1 ? "[" + tuple.toString("") + "] " : "[" + tuple.toString("") + "]";
                     numOfTuples--;
                 }
             }
+
             if (_tuples.size() == 1) {
                 for (AbstractSyntax.Tuple tuple : _tuples) {
                     result += tuple.toString("");
                 }
             }
+            */
+
+            if (_tuples.size() > 0){
+                for (AbstractSyntax.Tuple tuple : _tuples) {
+                    result += numOfTuples > 1 ? tuple.toString("") + " " : tuple.toString("");
+                    numOfTuples--;
+                }
+            }
+
             // add a space between the tuples and slots
             if (_tuples.size() > 0 && _slots.size() > 0)
                 result += " ";
@@ -1297,12 +1310,14 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
 
         private AbstractSyntax.Term _name;
         private AbstractSyntax.Term _value;
+        private SlotType _slotType;
 
-        public Slot(AbstractSyntax.Term name, AbstractSyntax.Term value) {
+        public Slot(AbstractSyntax.Term name, AbstractSyntax.Term value, SlotType slotType) {
             assert name != null;
             assert value != null;
             _name = name;
             _value = value;
+            _slotType = slotType;
         }
 
         public AbstractSyntax.Term getName() {
@@ -1324,9 +1339,20 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
         }
 
         public String toString(String indent) {
-            String result;
-            result = _name.toString("") + "->"
-                    + _value.toString("");
+
+            String result = "";
+
+            if (_slotType.equals(SlotType.DEPENDENT)){
+
+                result = _name.toString("") + "+>"
+                        + _value.toString("");
+            }
+            else if (_slotType.equals(SlotType.INDEPENDENT)){
+
+                result = _name.toString("") + "->"
+                        + _value.toString("");
+            }
+
             return result;
         }
 
@@ -1339,12 +1365,14 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
     public static class Tuple implements AbstractSyntax.Tuple {
 
         private LinkedList<AbstractSyntax.Term> _terms;
+        private TupleType tupleType;
 
-        public Tuple(Iterable<? extends AbstractSyntax.Term> terms) {
+        public Tuple(Iterable<? extends AbstractSyntax.Term> terms, TupleType tupleType) {
             _terms = new LinkedList<AbstractSyntax.Term>();
             if (terms != null)
                 for (AbstractSyntax.Term term : terms)
                     _terms.addLast(term);
+            this.tupleType = tupleType;
         }
 
         public Collection<? extends AbstractSyntax.Term> getArguments() {
@@ -1356,7 +1384,6 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
             for (AbstractSyntax.Term tm : _terms)
                 resultVars.addAll(tm.variables());
             return resultVars;
-
         }
 
         public String toString() {
@@ -1366,8 +1393,14 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
         public String toString(String indent) {
 
             //if(_terms.size() > 1){
-
             String result = "";
+
+            if (tupleType.equals(tupleType.DEPENDENT))
+                result += "+" + "[";
+            else if (tupleType.equals(tupleType.INDEPENDENT))
+                result += "-" + "[";
+
+            // tupleType.ARGS implicitly implemented here, wrapped around Tuple
             for (AbstractSyntax.Term t : _terms) {
                 // add space in between elements until the last element is printed
                 if (!t.equals(_terms.getLast()))
@@ -1375,6 +1408,12 @@ public class DefaultAbstractSyntax implements AbstractSyntax {
                 else
                     result += t.toString("");
             }
+
+            if (tupleType.equals(tupleType.DEPENDENT))
+                result += indent + "]";
+            else if (tupleType.equals(tupleType.INDEPENDENT))
+                result += indent + "]";
+
             return result;
         }
 
