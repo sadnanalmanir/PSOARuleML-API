@@ -1,406 +1,467 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://psoa.ruleml.org/lang/spec#" targetNamespace="http://psoa.ruleml.org/lang/spec#" elementFormDefault="qualified" version="Id: PSOACond.xsd, v. 1.0, 2011-10-19, ">
-  <!--the xml.xsd is imported from web address, to load faster load it locally
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://psoa.ruleml.org/lang/spec#"
+           targetNamespace="http://psoa.ruleml.org/lang/spec#" elementFormDefault="qualified"
+           version="Id: PSOACond.xsd, v. 1.0, 2011-10-19, ">
+    <!--the xml.xsd is imported from web address, to load faster load it locally
 
-  <xs:import namespace='http://www.w3.org/XML/1998/namespace'
-  schemaLocation='http://www.w3.org/2001/03/xml.xsd'/>
--->
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
-  <xs:annotation>
-    <xs:documentation>
+    <xs:import namespace='http://www.w3.org/XML/1998/namespace'
+    schemaLocation='http://www.w3.org/2001/03/xml.xsd'/>
+  -->
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+    <xs:annotation>
+        <xs:documentation>
 
-      Last updated: 2016-01-24
+            Last updated: 2016-01-24
 
-      This is the tentative XML schema for the Rule Language as defined by
-      the PSOA RuleML Published at http://www.cs.unb.ca/~boley/papers/SemanticsPsoaRules.pdf
+            This is the tentative XML schema for the Rule Language as defined by
+            the PSOA RuleML Published at http://www.cs.unb.ca/~boley/papers/SemanticsPsoaRules.pdf
 
 
-      The schema is based on the following EBNF for the PSOA RuleML Condition Language:
+            The schema is based on the following EBNF for the PSOA RuleML Condition Language:
 
-      FORMULA        ::= 'And' '(' FORMULA* ')' |
-      'Or' '(' FORMULA* ')' |
-      'Exists' Var+ '(' FORMULA ')' |
-      ATOMIC |
-      'External' '(' Atom ')'
-      ATOMIC         ::= Atom | Equal | Subclass
-      Atom           ::= PSOA
-      PSOA           ::= (oid '#')? op '(' TUPLEARGS | Tuple*  slot* ')'
-      Equal          ::= left '=' right
-      Subclass       ::= sub '##' super
-      oid            ::= INDTERM
-      op             ::= OPTERM
-      Tuple          ::= TUPLEARGS
-      TUPLEARGS      ::= INDTERM*
-      slot           ::= INDTERM '-&gt;' INDTERM
-      left           ::= INDTERM
-      right          ::= INDTERM
-      sub            ::= op
-      super          ::= op
-      INDTERM        ::= Ind | Var | Expr | 'External' '(' Expr ')'
-      OPTERM         ::= Rel | Fun | Var | Expr | 'External' '(' Expr ')'
-      Expr           ::= PSOA
-      Ind            ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
-      Rel            ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
-      Fun            ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
-      Var            ::= '?' UNICODESTRING?
-      SYMSPACE       ::= ANGLEBRACKIRI | CURIE
+            FORMULA ::= 'And' '(' FORMULA* ')' |
+            'Or' '(' FORMULA* ')' |
+            'Exists' Var+ '(' FORMULA ')' |
+            ATOMIC |
+            'External' '(' Atom ')'
+            ATOMIC ::= Atom | Equal | Subclass
+            Atom ::= PSOA
+            PSOA ::= (oid '#')? op '(' TUPLEARGS | TUPLEDI* SLOTDI* ')'
+            Equal ::= left '=' right
+            Subclass ::= sub '##' super
+            oid ::= INDTERM
+            op ::= OPTERM
+            TUPLEDI ::= tupdep | tup
+            SLOTDI ::= slotdep | slot
+            tupdep ::= Tuple
+            tup ::= Tuple
+            Tuple ::= TUPLEARGS
+            TUPLEARGS ::= INDTERM*
+            slotdep ::= INDTERM '+&gt;' INDTERM
+            slot ::= INDTERM '-&gt;' INDTERM
+            left ::= INDTERM
+            right ::= INDTERM
+            sub ::= op
+            super ::= op
+            INDTERM ::= Ind | Var | Expr | 'External' '(' Expr ')'
+            OPTERM ::= Rel | Fun | Var | Expr | 'External' '(' Expr ')'
+            Expr ::= PSOA
+            Ind ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
+            Rel ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
+            Fun ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
+            Var ::= '?' UNICODESTRING?
+            SYMSPACE ::= ANGLEBRACKIRI | CURIE
 
-      Currently string (http://www.w3.org/2001/XMLSchema#string), integer (http://www.w3.org/2001/XMLSchema#integer),
-      local (http://psoa.ruleml.org/lang/spec#local), and global (http://psoa.ruleml.org/lang/spec#global) datatype are supported
-      Only Top uses global (see Slide 21 of http://www.cs.unb.ca/~boley/talks/SemanticsPsoaRules-talk-AWoSS3.pdf)
+            Currently string (http://www.w3.org/2001/XMLSchema#string), integer
+            (http://www.w3.org/2001/XMLSchema#integer),
+            local (http://psoa.ruleml.org/lang/spec#local), and global (http://psoa.ruleml.org/lang/spec#global)
+            datatype are supported
+            Only Top uses global (see Slide 21 of http://www.cs.unb.ca/~boley/talks/SemanticsPsoaRules-talk-AWoSS3.pdf)
 
-    </xs:documentation>
-  </xs:annotation>
+        </xs:documentation>
+    </xs:annotation>
 
-  <xs:element name="formula">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="FORMULA"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+    <xs:element name="formula">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="FORMULA"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-  <xs:group name="FORMULA">
+    <xs:group name="FORMULA">
+        <!--
+        FORMULA        ::= 'And' '(' FORMULA* ')' |
+        'Or' '(' FORMULA* ')' |
+        'Exists' Var+ '(' FORMULA ')' |
+        ATOMIC |
+        'External' '(' Atom ')'
+      -->
+        <xs:choice>
+            <xs:element ref="And"/>
+            <xs:element ref="Or"/>
+            <xs:element ref="Exists"/>
+            <xs:group ref="ATOMIC"/>
+            <xs:element name="External" type="External-FORMULA.type"/>
+        </xs:choice>
+    </xs:group>
+
     <!--
-    FORMULA        ::= 'And' '(' FORMULA* ')' |
-    'Or' '(' FORMULA* ')' |
-    'Exists' Var+ '(' FORMULA ')' |
-    ATOMIC |
-    'External' '(' Atom ')'
-  -->
-    <xs:choice>
-      <xs:element ref="And"/>
-      <xs:element ref="Or"/>
-      <xs:element ref="Exists"/>
-      <xs:group ref="ATOMIC"/>
-      <xs:element name="External" type="External-FORMULA.type"/>
-    </xs:choice>
-  </xs:group>
-
-  <!--
-  FORMULA        ::= 'And' '(' FORMULA* ')'
-  -->
-  <xs:element name="And">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="formula" minOccurs="0" maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  FORMULA       ::= 'Or' '(' FORMULA* ')'
-  -->
-  <xs:element name="Or">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="formula" minOccurs="0" maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  FORMULA       ::= 'Exists' Var+ '(' FORMULA ')'
-  -->
-  <xs:element name="Exists">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="declare" minOccurs="1" maxOccurs="unbounded"/>
-        <xs:element ref="formula"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  FORMULA       ::= 'External' '(' Atom ')'
-  -->
-  <xs:complexType name="External-FORMULA.type">
-    <xs:sequence>
-      <xs:element name="content" type="content-FORMULA.type"/>
-    </xs:sequence>
-  </xs:complexType>
-  <!-- sensitive to FORMULA (Atom) context
-  FORMULA       ::= 'External' '(' Atom ')'
-  -->
-  <xs:complexType name="content-FORMULA.type">
-    <xs:sequence>
-      <xs:element ref="Atom"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="declare">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Var"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  ATOMIC         ::= Atom | Equal | Subclass
-  -->
-  <xs:group name="ATOMIC">
-    <xs:choice>
-      <xs:element ref="Atom"/>
-      <xs:element ref="Equal"/>
-      <xs:element ref="Subclass"/>
-    </xs:choice>
-  </xs:group>
-  <!--
-  Atom           ::= PSOA
-  -->
-  <xs:element name="Atom">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="PSOA"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  PSOA           ::= (oid '#')? op '(' Tuple*  slot* ')'
-  -->
-  <xs:group name="PSOA">
-    <xs:sequence>
-      <xs:element ref="oid" minOccurs="0" maxOccurs="1"/>
-      <xs:element ref="op"/>
-      <xs:choice>
-        <xs:element ref="Tuple" minOccurs="0" maxOccurs="unbounded"/>
-        <xs:group ref="TUPLEARGS"/>
-      </xs:choice>
-      <xs:element name="slot" type="slot-PSOA.type" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:group>
-  <!--
-  Tuple          ::= TUPLEARGS
-  -->
-  <xs:element name="Tuple">
-    <xs:complexType>
-      <xs:sequence>
-        <!--xs:group ref="INDTERM" minOccurs="1" maxOccurs="unbounded"/-->
-        <xs:group ref="TUPLEARGS"/>
-      </xs:sequence>
-      <xs:attribute name="ordered" type="xs:string" fixed="yes"/>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  TUPLEARGS          ::= INDTERM
-  -->
-  <xs:group name="TUPLEARGS">
-    <xs:sequence>
-      <xs:group ref="INDTERM" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:group>
-  <!--
-  slot           ::= INDTERM '-&gt;' INDTERM
-  -->
-  <xs:complexType name="slot-PSOA.type">
-    <xs:sequence>
-      <xs:group ref="INDTERM"/>
-      <xs:group ref="INDTERM"/>
-    </xs:sequence>
-    <xs:attribute name="ordered" type="xs:string" fixed="yes"/>
-  </xs:complexType>
-  <!--
-  oid            ::= INDTERM
-  -->
-  <xs:element name="oid">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="INDTERM"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  op             ::= OPTERM
-  -->
-  <xs:element name="op">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="OPTERM"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  Equal          ::= left '=' right
-  -->
-  <xs:element name="Equal">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="left"/>
-        <xs:element ref="right"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  left           ::= INDTERM
-  -->
-  <xs:element name="left">
-    <xs:complexType>
-      <xs:choice>
-        <xs:group ref="INDTERM"/>
-      </xs:choice>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  right          ::= INDTERM
-  -->
-  <xs:element name="right">
-    <xs:complexType>
-      <xs:choice>
-        <xs:group ref="INDTERM"/>
-      </xs:choice>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  Subclass       ::= sub '##' super
-  -->
-  <xs:element name="Subclass">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="sub"/>
-        <xs:element ref="super"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  sub            ::= op
-  -->
-  <xs:element name="sub">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="op"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  super          ::= op
-  -->
-  <xs:element name="super">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="op"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  INDTERM        ::= Ind | Var | Expr | 'External' '(' Expr ')'
-  -->
-  <xs:group name="INDTERM">
-    <xs:choice>
-      <xs:element ref="Ind"/>
-      <xs:element ref="Rel"/>
-      <xs:element ref="Var"/>
-      <xs:element ref="Expr"/>
-      <xs:element name="External" type="External-TERM.type"/>
-    </xs:choice>
-  </xs:group>
-  <!--
-  OPTERM         ::= Rel | Fun | Var | Expr | 'External' '(' Expr ')'
-  -->
-  <xs:group name="OPTERM">
-    <xs:choice>
-      <xs:element ref="Rel"/>
-      <xs:element ref="Fun"/>
-      <xs:element ref="Var"/>
-      <xs:element ref="Expr"/>
-      <xs:element name="External" type="External-TERM.type"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="External-TERM.type">
-    <!-- sensitive to TERM (Expr) context-->
-    <xs:sequence>
-      <xs:element name="content" type="content-TERM.type"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="content-TERM.type">
-    <!-- sensitive to TERM (Expr) context-->
-    <xs:sequence>
-      <xs:element ref="Expr"/>
-    </xs:sequence>
-  </xs:complexType>
-  <!--
-  Expr           ::= PSOA
-  -->
-  <xs:element name="Expr">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="PSOA"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <!--
-  Ind           ::= typed individual constant
-  -->
-  <xs:element name="Ind">
-    <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
-      </xs:sequence>
-      <xs:attribute name="type" type="xs:anyURI" use="required"/>
-      <!--xs:attribute ref="xml:lang"/-->
-    </xs:complexType>
-  </xs:element>
-  <!--
-  Rel           ::= typed relational constant
-  -->
-  <xs:element name="Rel">
-    <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
-      </xs:sequence>
-      <xs:attribute name="type" type="xs:anyURI" use="required"/>
-      <!--xs:attribute ref="xml:lang"/-->
-    </xs:complexType>
-  </xs:element>
-  <!--
-  Fun           ::= typed functional constant
-  -->
-  <xs:element name="Fun">
-    <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
-      </xs:sequence>
-      <xs:attribute name="type" type="xs:anyURI" use="required"/>
-      <!--xs:attribute ref="xml:lang"/-->
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Var">
-    <!--
-      Var            ::= '?' UNICODESTRING
+    FORMULA        ::= 'And' '(' FORMULA* ')'
     -->
-    <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:group name="IRIMETA">
+    <xs:element name="And">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="formula" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     <!--
-      IRIMETA   ::= '(*' IRICONST? (Frame | 'And' '(' Frame* ')')? '*)'
+    FORMULA       ::= 'Or' '(' FORMULA* ')'
     -->
-    <xs:sequence>
-      <xs:element ref="id" minOccurs="0" maxOccurs="1"/>
-      <xs:element ref="meta" minOccurs="0" maxOccurs="1"/>
-    </xs:sequence>
-  </xs:group>
-  <xs:element name="id">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="Ind" type="IRICONST.type"/>
-      </xs:sequence>
+    <xs:element name="Or">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="formula" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    FORMULA       ::= 'Exists' Var+ '(' FORMULA ')'
+    -->
+    <xs:element name="Exists">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="declare" minOccurs="1" maxOccurs="unbounded"/>
+                <xs:element ref="formula"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    FORMULA       ::= 'External' '(' Atom ')'
+    -->
+    <xs:complexType name="External-FORMULA.type">
+        <xs:sequence>
+            <xs:element name="content" type="content-FORMULA.type"/>
+        </xs:sequence>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="meta">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="And" type="And-meta.type"/>
-      </xs:sequence>
+    <!-- sensitive to FORMULA (Atom) context
+    FORMULA       ::= 'External' '(' Atom ')'
+    -->
+    <xs:complexType name="content-FORMULA.type">
+        <xs:sequence>
+            <xs:element ref="Atom"/>
+        </xs:sequence>
     </xs:complexType>
-  </xs:element>
-  <xs:complexType name="And-meta.type">
-    <!-- sensitive to meta (Frame) context-->
-    <xs:sequence>
-      <xs:element name="formula" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="IRICONST.type" mixed="true">
-    <!-- sensitive to location/id context-->
-    <xs:sequence/>
-    <xs:attribute name="type" type="xs:anyURI" use="required" fixed="http://psoa.ruleml.org/lang/spec#iri"/>
-  </xs:complexType>
+    <xs:element name="declare">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Var"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    ATOMIC         ::= Atom | Equal | Subclass
+    -->
+    <xs:group name="ATOMIC">
+        <xs:choice>
+            <xs:element ref="Atom"/>
+            <xs:element ref="Equal"/>
+            <xs:element ref="Subclass"/>
+        </xs:choice>
+    </xs:group>
+    <!--
+    Atom           ::= PSOA
+    -->
+    <xs:element name="Atom">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="PSOA"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    PSOA           ::= (oid '#')? op '(' TUPLEARGS | TUPLEDI*  SLOTDI* ')'
+    -->
+    <xs:group name="PSOA">
+        <xs:sequence>
+            <xs:element ref="oid" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="op"/>
+            <xs:choice>
+                <!--xs:element ref="Tuple" minOccurs="0" maxOccurs="unbounded"/-->
+                <xs:group ref="TUPLEDI" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:group ref="TUPLEARGS"/>
+            </xs:choice>
+            <xs:group ref="SLOTDI" minOccurs="0" maxOccurs="unbounded"/>
+            <!--xs:element name="slot" type="slot-PSOA.type" minOccurs="0" maxOccurs="unbounded"/-->
+        </xs:sequence>
+    </xs:group>
+    <!--
+    TUPLEDI          ::= tupdep | tup
+    -->
+    <xs:group name="TUPLEDI">
+        <xs:choice>
+            <xs:element ref="tup"/>
+            <xs:element ref="tupdep"/>
+        </xs:choice>
+    </xs:group>
+    <!--
+    tupdep          ::= Tuple
+    -->
+    <xs:element name="tupdep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Tuple"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    tup          ::= Tuple
+    -->
+    <xs:element name="tup">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Tuple"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    Tuple          ::= TUPLEARGS
+    -->
+    <xs:element name="Tuple">
+        <xs:complexType>
+            <xs:sequence>
+                <!--xs:group ref="INDTERM" minOccurs="1" maxOccurs="unbounded"/-->
+                <xs:group ref="TUPLEARGS"/>
+            </xs:sequence>
+            <xs:attribute name="ordered" type="xs:string" fixed="yes"/>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    TUPLEARGS          ::= INDTERM
+    -->
+    <xs:group name="TUPLEARGS">
+        <xs:sequence>
+            <xs:group ref="INDTERM" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+    <!--
+    SLOTDI          ::= slotdep | slot
+    -->
+    <xs:group name="SLOTDI">
+        <xs:choice>
+            <xs:element ref="slotdep"/>
+            <xs:element ref="slot"/>
+        </xs:choice>
+    </xs:group>
+    <!--
+    slotdep          ::= INDTERM '+&gt;' INDTERM
+    -->
+    <xs:element name="slotdep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="INDTERM"/>
+                <xs:group ref="INDTERM"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    slot          ::= INDTERM '-&gt;' INDTERM
+    -->
+    <xs:element name="slot">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="INDTERM"/>
+                <xs:group ref="INDTERM"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    oid            ::= INDTERM
+    -->
+    <xs:element name="oid">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="INDTERM"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    op             ::= OPTERM
+    -->
+    <xs:element name="op">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="OPTERM"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    Equal          ::= left '=' right
+    -->
+    <xs:element name="Equal">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="left"/>
+                <xs:element ref="right"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    left           ::= INDTERM
+    -->
+    <xs:element name="left">
+        <xs:complexType>
+            <xs:choice>
+                <xs:group ref="INDTERM"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    right          ::= INDTERM
+    -->
+    <xs:element name="right">
+        <xs:complexType>
+            <xs:choice>
+                <xs:group ref="INDTERM"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    Subclass       ::= sub '##' super
+    -->
+    <xs:element name="Subclass">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="sub"/>
+                <xs:element ref="super"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    sub            ::= op
+    -->
+    <xs:element name="sub">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="op"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    super          ::= op
+    -->
+    <xs:element name="super">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="op"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    INDTERM        ::= Ind | Var | Expr | 'External' '(' Expr ')'
+    -->
+    <xs:group name="INDTERM">
+        <xs:choice>
+            <xs:element ref="Ind"/>
+            <xs:element ref="Rel"/>
+            <xs:element ref="Var"/>
+            <xs:element ref="Expr"/>
+            <xs:element name="External" type="External-TERM.type"/>
+        </xs:choice>
+    </xs:group>
+    <!--
+    OPTERM         ::= Rel | Fun | Var | Expr | 'External' '(' Expr ')'
+    -->
+    <xs:group name="OPTERM">
+        <xs:choice>
+            <xs:element ref="Rel"/>
+            <xs:element ref="Fun"/>
+            <xs:element ref="Var"/>
+            <xs:element ref="Expr"/>
+            <xs:element name="External" type="External-TERM.type"/>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="External-TERM.type">
+        <!-- sensitive to TERM (Expr) context-->
+        <xs:sequence>
+            <xs:element name="content" type="content-TERM.type"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="content-TERM.type">
+        <!-- sensitive to TERM (Expr) context-->
+        <xs:sequence>
+            <xs:element ref="Expr"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+    Expr           ::= PSOA
+    -->
+    <xs:element name="Expr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="PSOA"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    Ind           ::= typed individual constant
+    -->
+    <xs:element name="Ind">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="type" type="xs:anyURI" use="required"/>
+            <!--xs:attribute ref="xml:lang"/-->
+        </xs:complexType>
+    </xs:element>
+    <!--
+    Rel           ::= typed relational constant
+    -->
+    <xs:element name="Rel">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="type" type="xs:anyURI" use="required"/>
+            <!--xs:attribute ref="xml:lang"/-->
+        </xs:complexType>
+    </xs:element>
+    <!--
+    Fun           ::= typed functional constant
+    -->
+    <xs:element name="Fun">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="type" type="xs:anyURI" use="required"/>
+            <!--xs:attribute ref="xml:lang"/-->
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Var">
+        <!--
+          Var            ::= '?' UNICODESTRING
+        -->
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:group name="IRIMETA">
+        <!--
+          IRIMETA   ::= '(*' IRICONST? (Frame | 'And' '(' Frame* ')')? '*)'
+        -->
+        <xs:sequence>
+            <xs:element ref="id" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="meta" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:element name="id">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Ind" type="IRICONST.type"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="meta">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="And" type="And-meta.type"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="And-meta.type">
+        <!-- sensitive to meta (Frame) context-->
+        <xs:sequence>
+            <xs:element name="formula" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IRICONST.type" mixed="true">
+        <!-- sensitive to location/id context-->
+        <xs:sequence/>
+        <xs:attribute name="type" type="xs:anyURI" use="required" fixed="http://psoa.ruleml.org/lang/spec#iri"/>
+    </xs:complexType>
 </xs:schema>
