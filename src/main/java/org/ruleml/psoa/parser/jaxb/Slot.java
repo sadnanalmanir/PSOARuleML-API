@@ -10,14 +10,12 @@ package org.ruleml.psoa.parser.jaxb;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
-import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -31,9 +29,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;group ref="{http://psoa.ruleml.org/lang/spec#}IRIMETA" minOccurs="0"/&gt;
+ *         &lt;group ref="{http://psoa.ruleml.org/lang/spec#}INDTERM"/&gt;
+ *         &lt;group ref="{http://psoa.ruleml.org/lang/spec#}INDTERM"/&gt;
  *       &lt;/sequence&gt;
- *       &lt;attribute name="type" use="required" type="{http://www.w3.org/2001/XMLSchema}anyURI" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -45,20 +43,29 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "content"
 })
-@XmlRootElement(name = "Rel")
-public class Rel {
+@XmlRootElement(name = "slot")
+public class Slot {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "meta", namespace = "http://psoa.ruleml.org/lang/spec#", type = Meta.class, required = false),
-        @XmlElementRef(name = "id", namespace = "http://psoa.ruleml.org/lang/spec#", type = Id.class, required = false)
+        @XmlElementRef(name = "Rel", namespace = "http://psoa.ruleml.org/lang/spec#", type = Rel.class, required = false),
+        @XmlElementRef(name = "Ind", namespace = "http://psoa.ruleml.org/lang/spec#", type = Ind.class, required = false),
+        @XmlElementRef(name = "Expr", namespace = "http://psoa.ruleml.org/lang/spec#", type = Expr.class, required = false),
+        @XmlElementRef(name = "Var", namespace = "http://psoa.ruleml.org/lang/spec#", type = Var.class, required = false),
+        @XmlElementRef(name = "External", namespace = "http://psoa.ruleml.org/lang/spec#", type = JAXBElement.class, required = false)
     })
-    @XmlMixed
     protected List<Object> content;
-    @XmlAttribute(name = "type", required = true)
-    @XmlSchemaType(name = "anyURI")
-    protected String type;
 
     /**
+     * Gets the rest of the content model. 
+     * 
+     * <p>
+     * You are getting this "catch-all" property because of the following reason: 
+     * The field name "Ind" is used by two different parts of a schema. See: 
+     * line 352 of file:/home/sadnan/NetBeansProjects/my-app/src/main/resources/PSOACond.xsd
+     * line 352 of file:/home/sadnan/NetBeansProjects/my-app/src/main/resources/PSOACond.xsd
+     * <p>
+     * To get rid of this property, apply a property customization to one 
+     * of both of the following declarations to change their names: 
      * Gets the value of the content property.
      * 
      * <p>
@@ -76,9 +83,11 @@ public class Rel {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * {@link Id }
-     * {@link Meta }
+     * {@link Expr }
+     * {@link Rel }
+     * {@link Ind }
+     * {@link Var }
+     * {@link JAXBElement }{@code <}{@link ExternalTERMType }{@code >}
      * 
      * 
      */
@@ -87,30 +96,6 @@ public class Rel {
             content = new ArrayList<Object>();
         }
         return this.content;
-    }
-
-    /**
-     * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setType(String value) {
-        this.type = value;
     }
 
 }

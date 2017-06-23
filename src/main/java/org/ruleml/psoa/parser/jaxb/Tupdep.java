@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Ind" type="{http://psoa.ruleml.org/lang/spec#}IRICONST.type"/&gt;
+ *         &lt;element ref="{http://psoa.ruleml.org/lang/spec#}Tuple"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -36,36 +36,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "ind"
+    "tuple"
 })
-@XmlRootElement(name = "id")
-public class Id {
+@XmlRootElement(name = "tupdep")
+public class Tupdep {
 
-    @XmlElement(name = "Ind", required = true)
-    protected IRICONSTType ind;
+    @XmlElement(name = "Tuple", required = true)
+    protected Tuple tuple;
 
     /**
-     * Gets the value of the ind property.
+     * Gets the value of the tuple property.
      * 
      * @return
      *     possible object is
-     *     {@link IRICONSTType }
+     *     {@link Tuple }
      *     
      */
-    public IRICONSTType getInd() {
-        return ind;
+    public Tuple getTuple() {
+        return tuple;
     }
 
     /**
-     * Sets the value of the ind property.
+     * Sets the value of the tuple property.
      * 
      * @param value
      *     allowed object is
-     *     {@link IRICONSTType }
+     *     {@link Tuple }
      *     
      */
-    public void setInd(IRICONSTType value) {
-        this.ind = value;
+    public void setTuple(Tuple value) {
+        this.tuple = value;
     }
 
 }
